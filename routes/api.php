@@ -23,4 +23,7 @@ Route::post('register', 'API\ApiController@register');
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('getDetails', 'API\ApiController@getDetails');
     Route::post('getGoods', 'API\GoodsController@show');
+    Route::post('getFirstCategories', 'API\CategoriesController@getFirstCategories');
+    Route::get('getGoodsList/{category}', 'API\GoodsController@getGoodsList');
+    Route::get('getGoodsDetail/{goods}', 'API\GoodsController@getGoodsDetail');
 });
