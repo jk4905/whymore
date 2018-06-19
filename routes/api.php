@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\ApiController@login');
 Route::post('register', 'API\ApiController@register');
 
-Route::group(['middleware' => 'auth:api'], function(){
+Route::group(['middleware' => 'auth:api'], function () {
     Route::post('getDetails', 'API\ApiController@getDetails');
+    Route::post('getGoods', 'API\GoodsController@show');
 });
