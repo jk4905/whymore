@@ -16,7 +16,7 @@ return [
 
         // 默认可用的发送网关
         'gateways' => [
-            'aliyun','alidayu'
+            'aliyun'
         ],
     ],
     // 可用的网关配置
@@ -25,16 +25,9 @@ return [
             'file' => '/tmp/easy-sms.log',
         ],
         'aliyun' => [
-            'access_key_id' => 'LTAILFhiSpJUo6W8',
-            'access_key_secret' => 'sJGzGvA9YXoQTV95rKqBPGN9L1EfhW',
-//            'app_key' => 'LTAIpHkHmCC8lJSV',
-//            'app_secret' => 'izBy9zOrNjpA6djVv8dZ98cEc20vnK',
+            'access_key_id' => env('SMS_ACCESS_KEY_ID'),
+            'access_key_secret' => env('SMS_ACCESS_KEY_SECRET'),
             'sign_name' => '知书',
         ],
-//        'alidayu' => [
-//            'app_key' => 'LTAIpHkHmCC8lJSV',
-//            'app_secret' => 'izBy9zOrNjpA6djVv8dZ98cEc20vnK',
-//            'sign_name' => '知书',
-//        ],
     ],
 ];
