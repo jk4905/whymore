@@ -10,6 +10,7 @@
         "doctrine/dbal": "^2.7",
         "encore/redis-manager": "^0.1.2",
         "fideloper/proxy": "~3.3",
+        "gloudemans/shoppingcart": "^2.5",
         "laravel/framework": "5.5.*",
         "laravel/passport": "~4.0",
         "laravel/tinker": "~1.0",

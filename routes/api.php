@@ -25,6 +25,10 @@ Route::post('sendSms', 'API\UsersController@sendSms');
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('getDetails', 'API\ApiController@getDetails');
     Route::post('getGoods', 'API\GoodsController@show');
+    Route::get('test', 'API\CartsController@test');
+    Route::get('myCart', 'API\CartsController@index');
+    Route::post('addGoods', 'API\CartsController@store');
+    Route::post('delGoods', 'API\CartsController@destroy');
     Route::post('getFirstCategories', 'API\CategoriesController@getFirstCategories');
     Route::get('getGoodsList/{category}', 'API\GoodsController@getGoodsList');
     Route::get('getGoodsDetail/{goods}', 'API\GoodsController@getGoodsDetail');

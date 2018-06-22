@@ -26,7 +26,10 @@ class Controller extends BaseController
         $message = '';
         if (empty($msg)) {
             $message = config('errorcode.code')[(int)$code];
-        } elseif (is_array($msg)) {
+        } else {
+            if (is_object($msg)) {
+                $msg = $msg->toArray();
+            }
             $err = array_shift($msg);
             $message = array_shift($err);
 //            $message = implode('',1);
