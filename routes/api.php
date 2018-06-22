@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 //});
 
 Route::post('login', 'API\UsersController@login');
-Route::post('register', 'API\UsersController@register');
+Route::post('register', 'API\UsersController@store');
 Route::post('sendSms', 'API\UsersController@sendSms');
 
 
@@ -28,4 +28,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('getFirstCategories', 'API\CategoriesController@getFirstCategories');
     Route::get('getGoodsList/{category}', 'API\GoodsController@getGoodsList');
     Route::get('getGoodsDetail/{goods}', 'API\GoodsController@getGoodsDetail');
+    Route::post('uploadAvatar', 'API\UsersController@uploadAvatar');
+    Route::post('updateInfo', 'API\UsersController@update');
 });

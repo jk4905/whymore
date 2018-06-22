@@ -21,12 +21,21 @@ class Controller extends BaseController
         ]);
     }
 
-    public function fail($code, $data = [])
+    public function fail($code, $msg = '', $data = [])
     {
+        $message = '';
+        if (empty($msg)) {
+            $message = config('errorcode.code')[(int)$code];
+        } elseif (is_array($msg)) {
+            $err = array_shift($msg);
+            $message = array_shift($err);
+//            $message = implode('',1);
+        }
+
         return response()->json([
             'status' => false,
             'code' => $code,
-            'message' => config('errorcode.code')[(int)$code],
+            'message' => $message,
             'data' => $data,
         ]);
     }

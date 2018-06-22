@@ -8,12 +8,15 @@
         "php": ">=7.0.0",
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/dbal": "^2.7",
+        "encore/redis-manager": "^0.1.2",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
         "laravel/passport": "~4.0",
         "laravel/tinker": "~1.0",
         "overtrue/easy-sms": "^1.1",
-        "overtrue/laravel-lang": "~3.0"
+        "overtrue/laravel-filesystem-qiniu": "^1.0",
+        "overtrue/laravel-lang": "~3.0",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

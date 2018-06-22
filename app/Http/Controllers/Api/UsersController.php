@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Auth;
@@ -24,7 +26,7 @@ class UsersController extends Controller
             $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
             return $this->success($success);
         } else {
-            return $this->fail(400001);
+            return $this->fail(40001);
         }
     }
 
@@ -33,21 +35,22 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'mobile' => 'required|digits:11',
+            'mobile' => 'required|digits:11|unique:mysql.users,mobile',
             'code' => 'required|digits:6',
             'password' => 'required|min:6|max:32',
+        ], [
+            'unique' => '您已经注册过本网站了'
         ]);
         if ($validator->fails()) {
-            return $this->fail(400002, $validator->errors());
+            return $this->fail(40002, $validator->errors());
         }
 
-        $sessionMobile = session('mobile');
-        $sessionCode = session('code');
-        if ($request->mobile != $sessionMobile || $request->code != $sessionCode) {
-            $this->fail(400004);
+        $redisCode = Redis::get('mobileCode' . $request->mobile);
+        if ($redisCode != $request->code) {
+            return $this->fail(40004);
         }
 
         $input = $request->all();
@@ -56,7 +59,8 @@ class UsersController extends Controller
         $user = User::create($input);
         $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
         $success['mobile'] = $user->mobile;
-        session()->remove('code');
+        Redis::del('mobileCode' . $request->mobile);
+        Auth::login($user);
         return $this->success($success);
     }
 
@@ -69,12 +73,13 @@ class UsersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'mobile' => 'required|digits:11|unique:mysql.users,mobile'
+        ], [
+            'unique' => '您已经注册过本网站了'
         ]);
         if ($validator->fails()) {
-            return $this->fail(400002, $validator->errors());
+            return $this->fail(40002, $validator->errors()->toArray());
         }
         $code = rand(100000, 999999);
-        session(['code' => $code, 'mobile' => $request->mobile]);
         // 时区很重要，服务器时区要一致
         try {
 //            dd(date('Y-m-d H:i:s', time()));
@@ -88,13 +93,72 @@ class UsersController extends Controller
                 ],
             ]);
             if ($ret['aliyun']['status'] == 'success' && $ret['aliyun']['result']['Code'] == 'OK') {
+                Redis::setex('mobileCode' . $request->mobile, 300, $code);
                 return $this->success([]);
             } else {
-                return $this->fail(400003);
+                return $this->fail(40003);
             }
         } catch (\Overtrue\EasySms\Exceptions\NoGatewayAvailableException $exception) {
-            dd($exception->getExceptions());
-            $this->fail();
+//            dd($exception->getExceptions());
+            $this->fail(40003);
         }
+    }
+
+    /**
+     * 更新个人资料
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+//        验证
+        $validator = Validator::make($request->all(), [
+            'name' => 'min:2|max:16|filled',
+            'avatar' => 'string|filled'
+        ]);
+        if ($validator->fails()) {
+            return $this->fail(40002, $validator->errors()->toArray());
+        }
+//        获得用户实例
+        $user = Auth::user();
+        foreach ($request->all() as $key => $item) {
+            if (empty($item)) {
+                continue;
+            }
+            $user->$key = $item;
+        }
+//        保存
+        $user->save();
+//        返回更新后的实例
+        if (!empty($user->avatar)) {
+            $disk = Storage::disk('qiniu');
+            $user->avatar = $disk->getUrl($user->avatar);
+        }
+        return $this->success($user);
+    }
+
+    /**
+     * 上传图片
+     * @param Request $request
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|file',
+        ]);
+        if ($validator->fails()) {
+            return $this->fail(40002, $validator->errors()->toArray());
+        }
+        $path = $request->file('avatar')->store('/');
+        $realPath = public_path('upload/') . $path;
+        $disk = Storage::disk('qiniu');
+        $ret = $disk->put($path, file_get_contents($realPath));
+        if (!$ret) {
+            return $this->fail(40005);
+        }
+        $url = $disk->getUrl($path);
+//        删除本地文件
+        unlink($realPath);
+        return $this->success(['avatar' => $path, 'preview' => $url]);
     }
 }
