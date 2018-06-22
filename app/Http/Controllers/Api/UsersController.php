@@ -55,7 +55,6 @@ class UsersController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-//        dd($input);
         $user = User::create($input);
         $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
         $success['mobile'] = $user->mobile;
