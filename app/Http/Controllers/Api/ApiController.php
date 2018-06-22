@@ -69,6 +69,7 @@ class ApiController extends Controller
     public function getDetails()
     {
         $user = Auth::user();
+        dd($user);
         return $this->success($user);
     }
 }
