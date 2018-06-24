@@ -70,6 +70,7 @@ class ApiController extends Controller
     {
         $user = Auth::user();
         dd($user);
+        exit;
         return $this->success($user);
     }
 }
