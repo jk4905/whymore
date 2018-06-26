@@ -46,7 +46,7 @@ class CartsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'goods_id.*' => 'required|exists:goods,id,status,1',
+            'goods_id.*' => 'required|numeric|exists:goods,id,status,1',
 //            'qty' => 'required|numeric|min:1',
         ], [
             'exists' => '没有此商品',
@@ -82,6 +82,7 @@ class CartsController extends Controller
         if ($validator->fails()) {
             return $this->fail(40002, $validator->errors());
         }
+
         $this->delRowInCart($request->row_id);
         return $this->success();
     }

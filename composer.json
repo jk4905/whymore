@@ -7,6 +7,7 @@
     "require": {
         "php": ">=7.0.0",
         "barryvdh/laravel-ide-helper": "^2.4",
+        "cblink/region": "^1.0",
         "doctrine/dbal": "^2.7",
         "encore/redis-manager": "^0.1.2",
         "fideloper/proxy": "~3.3",

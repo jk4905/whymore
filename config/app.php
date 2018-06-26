@@ -189,6 +189,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
+        Cblink\Region\RegionServiceProvider::class,
     ],
 
     /*

@@ -23,15 +23,27 @@ Route::post('sendSms', 'API\UsersController@sendSms');
 
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::post('getDetails', 'API\ApiController@getDetails');
-    Route::post('getGoods', 'API\GoodsController@show');
-    Route::get('test', 'API\CartsController@test');
-    Route::get('myCart', 'API\CartsController@index');
-    Route::post('addGoods', 'API\CartsController@store');
-    Route::post('delGoods', 'API\CartsController@destroy');
-    Route::post('getFirstCategories', 'API\CategoriesController@getFirstCategories');
-    Route::get('getGoodsList/{category}', 'API\GoodsController@getGoodsList');
-    Route::get('getGoodsDetail/{goods}', 'API\GoodsController@getGoodsDetail');
-    Route::post('uploadAvatar', 'API\UsersController@uploadAvatar');
-    Route::post('updateInfo', 'API\UsersController@update');
+//    Carts
+    Route::get('goods', 'API\CartsController@index');
+    Route::post('goods', 'API\CartsController@store');
+    Route::delete('goods', 'API\CartsController@destroy');
+
+//    Categories
+    Route::get('categories', 'API\CategoriesController@getFirstCategories');
+
+//    Goods
+    Route::get('categories/{category}', 'API\GoodsController@getGoodsList');
+    Route::get('goods/{goods}', 'API\GoodsController@getGoodsDetail');
+
+//    Users
+    Route::post('avatars', 'API\UsersController@uploadAvatar');
+    Route::put('info', 'API\UsersController@update');
+
+//    Addresses
+    Route::get('provinces', 'API\AddressesController@getProvinces');
+    Route::get('cities/{city}', 'API\AddressesController@getCities');
+    Route::get('areas/{area}', 'API\AddressesController@getAreas');
+    Route::get('addresses', 'API\AddressesController@index');
+    Route::post('addresses', 'API\AddressesController@store');
+    Route::put('addresses/{address}', 'API\AddressesController@update');
 });

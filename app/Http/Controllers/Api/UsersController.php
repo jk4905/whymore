@@ -140,8 +140,9 @@ class UsersController extends Controller
      * 上传图片
      * @param Request $request
      */
-    public function uploadAvatar(Request $request)
+    public function uploadAvatar(Request $request, User $user)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|file',
         ]);

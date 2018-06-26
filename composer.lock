@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31913ba919bd50b353cf08b66be76c09",
+    "content-hash": "0dcaadb253cfb66cf8a29e58a65d863d",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -169,6 +169,48 @@
                 "lpm"
             ],
             "time": "2018-06-23T14:49:42+00:00"
+        },
+        {
+            "name": "cblink/region",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cblink/region.git",
+                "reference": "91fe66c49610ee4cf0d55d589a24b7d0e874a286"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/cblink/region/91fe66c49610ee4cf0d55d589a24b7d0e874a286.zip",
+                "reference": "91fe66c49610ee4cf0d55d589a24b7d0e874a286",
+                "shasum": ""
+            },
+            "require-dev": {
+                "laravel/framework": "5.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Cblink\\Region\\RegionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cblink\\Region\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hanson",
+                    "email": "h@hanc.cc"
+                }
+            ],
+            "time": "2018-04-19T13:04:54+00:00"
         },
         {
             "name": "defuse/php-encryption",

@@ -15,9 +15,9 @@ class AddUserInfoToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('email');
-            $table->string('mobile', 20)->comment('手机号');
-            $table->string('avatar', 255)->nullable()->comment('头像');
-            $table->string('name', 255)->nullable()->comment('昵称')->change();
+            $table->string('mobile', 20)->after('id')->comment('手机号');
+            $table->string('avatar', 255)->after('mobile')->nullable()->comment('头像');
+            $table->string('name', 255)->nullable()->after('avatar')->comment('昵称')->change();
             $table->unique('mobile', 'uni_mobile')->comment('手机号唯一键');
         });
     }

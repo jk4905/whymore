@@ -34,16 +34,6 @@ class GoodsController extends Controller
         return $this->success(compact('categoryList'));
     }
 
-    /**
-     * 获取商品详情
-     * @param Goods $goods
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getGoodsDetail(Goods $goods)
-    {
-        return $this->success($goods);
-    }
-
     public function getGoodsListBack2(Category $category)
     {
         $categoryList = Category::where('pid', $category->id)->get();
@@ -59,5 +49,15 @@ class GoodsController extends Controller
             return $item['goodsList'];
         });
         return $this->success($categoryList);
+    }
+
+    /**
+     * 获取商品详情
+     * @param Goods $goods
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getGoodsDetail(Goods $goods)
+    {
+        return $this->success($goods);
     }
 }
