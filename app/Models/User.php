@@ -27,4 +27,20 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * 优惠券
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'user_coupons')->withPivot('begin_at', 'end_at', 'status')->withTimestamps();
+//        return $this->hasManyThrough(Coupon::class, UserCoupon::class,'id','id');
+    }
 }

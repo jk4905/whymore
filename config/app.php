@@ -190,6 +190,7 @@ return [
 
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
         Cblink\Region\RegionServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*

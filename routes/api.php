@@ -46,4 +46,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('addresses', 'API\AddressesController@index');
     Route::post('addresses', 'API\AddressesController@store');
     Route::put('addresses/{address}', 'API\AddressesController@update');
+
+//    Coupon
+    Route::get('coupons', 'API\CouponsController@index');
+    Route::post('coupons/{coupon}', 'API\CouponsController@add');
+
 });
