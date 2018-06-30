@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Exceptions\InvalidRequestException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends Model
 {
@@ -58,4 +60,18 @@ class Order extends Model
 
         return false;
     }
+
+    public function checkPay()
+    {
+        if ($this->status != 1) {
+            throw new InvalidRequestException('订单状态错误');
+        }
+
+//        if ($this->user_id != Auth::user()->id) {
+//            throw new InvalidRequestException('没有找到订单');
+//        }
+
+        return true;
+    }
+
 }

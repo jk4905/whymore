@@ -58,3 +58,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('orders/{order}', 'API\OrdersController@show');
     Route::post('orders', 'API\OrdersController@store');
 });
+
+Route::get('orders/{order}/alipay', 'API\OrdersController@alipay')->name('alipay');

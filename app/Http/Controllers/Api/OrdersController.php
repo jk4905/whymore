@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Libraries\Carts;
 use App\Models\Address;
 use App\Models\Coupon;
@@ -118,7 +119,7 @@ class OrdersController extends Controller
 //        删除购物车商品
         $this->cart->remove($request->row_id);
 
-        return $this->success([]);
+        return $this->success(['redirect_url' => route('alipay', ['id' => $order->id])]);
     }
 
     /**
@@ -151,5 +152,19 @@ class OrdersController extends Controller
 
         return [$realAmount, $discount];
     }
+
+    public function alipay(Order $order)
+    {
+        $order->checkPay();
+
+        $data = [
+            'out_trade_no' => $order->order_id,
+            'total_amount' => sprintf("%.2f", $order->real_amount),
+            'subject' => 'test subject - 测试',
+        ];
+
+        return app('alipay')->wap($data);
+    }
+
 
 }
