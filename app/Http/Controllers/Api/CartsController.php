@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Libraries\Carts;
+use App\Models\Coupon;
 use App\Models\Goods;
+use App\Models\Order;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,12 +20,14 @@ class CartsController extends Controller
     public $cartInstance;
     public $disk;
 
+
     public function __construct()
     {
+        parent::__construct();
         $this->cartInstance = Cart::instance(self::$cart);
         $this->disk = Storage::disk('qiniu');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -95,9 +100,10 @@ class CartsController extends Controller
     public function getGoodsList($content)
     {
         $goodsList = [];
-        foreach ($content as $row) {
+        foreach ($content as $key => $row) {
             $goods = $row->model->toArray();
             if ($goods['status'] == 2) {
+                unset($content[$key]);
                 continue;
             }
             $goods['image'] = $this->disk->getUrl($goods['image']);
@@ -140,4 +146,43 @@ class CartsController extends Controller
         }
         return true;
     }
+
+    /**
+     * 确认订单
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function confirm(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'row_id.*' => 'required',
+        ]);
+//
+        if ($validator->fails()) {
+            return $this->fail(40002, $validator->errors());
+        }
+//        // 获取购物车
+        $this->cartInstance->restore(Auth::user()->id);
+        $list = [];
+        $goodsAmount = 0;
+        foreach ($request->row_id as $rowId) {
+            $cartsGoods = $this->cartInstance->get($rowId);
+            $goodsInfo = Goods::findOrFail($cartsGoods->id);
+            $goodsInfo['qty'] = $cartsGoods->qty;
+            $goodsInfo['image'] = $this->disk->getUrl($goodsInfo['image']);
+            $list[] = $goodsInfo;
+            $goodsAmount = bcadd($goodsAmount, bcmul($goodsInfo['sale_price'], $goodsInfo['qty']));
+        }
+        // 保存购物车
+        $this->cartInstance->store(Auth::user()->id);
+//        优惠券可用数量
+        $couponCount = Coupon::list(Auth::user(), $goodsAmount)->count();
+
+        $shippingType = Order::$shippingType;
+        $freight = Order::$freight;
+        $payType = Order::$paymentType;
+        return $this->success(compact('list', 'couponCount', 'shippingType', 'freight', 'payType'));
+    }
+
 }

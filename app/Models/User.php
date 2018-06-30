@@ -43,4 +43,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Coupon::class, 'user_coupons')->withPivot('begin_at', 'end_at', 'status')->withTimestamps();
 //        return $this->hasManyThrough(Coupon::class, UserCoupon::class,'id','id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

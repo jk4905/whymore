@@ -24,9 +24,11 @@ Route::post('sendSms', 'API\UsersController@sendSms');
 
 Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
-    Route::get('goods', 'API\CartsController@index');
-    Route::post('goods', 'API\CartsController@store');
-    Route::delete('goods', 'API\CartsController@destroy');
+    Route::get('carts', 'API\CartsController@index');
+    Route::post('carts', 'API\CartsController@store');
+    Route::delete('carts', 'API\CartsController@destroy');
+    Route::get('carts/confirm', 'API\CartsController@confirm');
+
 
 //    Categories
     Route::get('categories', 'API\CategoriesController@getFirstCategories');
@@ -47,8 +49,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('addresses', 'API\AddressesController@store');
     Route::put('addresses/{address}', 'API\AddressesController@update');
 
-//    Coupon
+//    Coupons
     Route::get('coupons', 'API\CouponsController@index');
     Route::post('coupons/{coupon}', 'API\CouponsController@add');
 
+//    Orders
+    Route::get('orders', 'API\OrdersController@index');
+    Route::get('orders/{order}', 'API\OrdersController@show');
+    Route::post('orders', 'API\OrdersController@store');
 });

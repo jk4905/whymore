@@ -14,16 +14,7 @@ class CouponsController extends Controller
 
     public function index()
     {
-        $list = Auth::user()->with(['coupons' => function ($query) {
-            return $query->orderBy('status', 'asc');
-        }])->where('id', Auth::user()->id)->get();
-        $list = $list->pluck('coupons')[0];
-        $list = $list->each(function ($item, $key) {
-            $item->status = $item->pivot->status;
-            $item->begin_at = date('Y-m-d H:i:s', $item->pivot->begin_at);
-            $item->end_at = date('Y-m-d H:i:s', $item->pivot->end_at);
-            unset($item->pivot);
-        });
+        $list = Coupon::list(Auth::user());
         return $this->success(compact('list'));
     }
 

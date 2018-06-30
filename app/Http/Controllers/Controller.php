@@ -11,6 +11,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function __construct()
+    {
+        bcscale(4);
+    }
+
     public function success($data = [])
     {
         return response()->json([
