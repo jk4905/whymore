@@ -64,7 +64,6 @@ class Coupon extends Model
         $couponInfo = self::with(['users' => function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('begin_at', '>=', Carbon::now())->where('end_at', '<=', Carbon::now());
         }])->where('condition', '<', $amount)->find($couponId);
-
         return $couponInfo;
     }
 }
