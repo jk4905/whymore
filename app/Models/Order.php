@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Models;
+namespace App\Models;
 
-use app\Exceptions\InvalidRequestException;
+use App\Exceptions\InvalidRequestException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 

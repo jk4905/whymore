@@ -1,12 +1,12 @@
 <?php
 
-namespace app\Services;
+namespace App\Services;
 
-use app\Exceptions\InvalidRequestException;
-use app\Models\Address;
-use app\Models\Coupon;
-use app\Models\Order;
-use app\Models\User;
+use App\Exceptions\InvalidRequestException;
+use App\Models\Address;
+use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class OrderService

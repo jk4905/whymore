@@ -1,16 +1,16 @@
 <?php
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use app\Exceptions\InvalidRequestException;
-use app\Models\Address;
-use app\Models\Coupon;
-use app\Models\Order;
-use app\Services\CartService;
-use app\Services\OrderService;
+use App\Exceptions\InvalidRequestException;
+use App\Models\Address;
+use App\Models\Coupon;
+use App\Models\Order;
+use App\Services\CartService;
+use App\Services\OrderService;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;

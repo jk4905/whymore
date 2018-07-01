@@ -6,7 +6,7 @@
  * Time: 10:32
  */
 
-namespace app\Api\Helpers\Api;
+namespace App\Api\Helpers\Api;
 
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 use Illuminate\Http\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,7 +8,7 @@ class Category extends Model
 {
     public function parentCategory()
     {
-        return $this->belongsTo('app\Models\Category', 'id', 'pid');
+        return $this->belongsTo('App\Models\Category', 'id', 'pid');
     }
 
     public function childrenCategories()
@@ -16,7 +16,7 @@ class Category extends Model
 //        第一个参数是要关联的 Category2 的模型名称
 //        第二个参数是外键，是关联的 Category 的键。也就是 Category1 的 id 关联上 Category2 的 pid。
 //        第三个参数是 Category1 的主键
-        return $this->hasMany('app\Models\Category', 'pid', 'id');
+        return $this->hasMany('App\Models\Category', 'pid', 'id');
     }
 
     public function allChildrenCategories()
@@ -30,7 +30,7 @@ class Category extends Model
      */
     public function goodsback()
     {
-        return $this->hasMany('app\Models\Goods', 'category_id', 'id');
+        return $this->hasMany('App\Models\Goods', 'category_id', 'id');
     }
 
     /**

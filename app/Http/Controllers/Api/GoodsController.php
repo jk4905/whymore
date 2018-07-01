@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Http\Controllers\API;
+namespace App\Http\Controllers\API;
 
-use app\Models\Category;
-use app\Models\Goods;
+use App\Models\Category;
+use App\Models\Goods;
 use Illuminate\Http\Request;
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 class GoodsController extends Controller
 {

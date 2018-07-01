@@ -1,10 +1,10 @@
 <?php
 
-namespace app\Http\Controllers\API;
+namespace App\Http\Controllers\API;
 
-use app\Models\Category;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {

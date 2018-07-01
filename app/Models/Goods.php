@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,6 +8,6 @@ class Goods extends Model
 {
     public function category()
     {
-        return $this->belongsTo('app\Models\Category', 'id', 'category_id');
+        return $this->belongsTo('App\Models\Category', 'id', 'category_id');
     }
 }

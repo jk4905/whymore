@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use app\Models\User;
+use App\Models\User;
 use Auth;
 use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\Exception;

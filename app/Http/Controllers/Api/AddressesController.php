@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use app\Models\Address;
-use app\Models\Area;
-use app\Models\City;
-use app\Models\Province;
+use App\Models\Address;
+use App\Models\Area;
+use App\Models\City;
+use App\Models\Province;
 use Illuminate\Http\Request;
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
