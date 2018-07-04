@@ -4,12 +4,12 @@ use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Api Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is where you can register Api routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| is assigned the "api" middleware group. Enjoy building your Api!
 |
 */
 
@@ -17,46 +17,46 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
-Route::post('login', 'API\UsersController@login');
-Route::post('register', 'API\UsersController@store');
-Route::post('sendSms', 'API\UsersController@sendSms');
+Route::post('login', 'Api\UsersController@login');
+Route::post('register', 'Api\UsersController@store');
+Route::post('sendSms', 'Api\UsersController@sendSms');
 
 
 Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
-    Route::get('carts', 'API\CartsController@index');
-    Route::post('carts', 'API\CartsController@store');
-    Route::delete('carts', 'API\CartsController@destroy');
-    Route::get('carts/confirm', 'API\CartsController@confirm');
+    Route::get('carts', 'Api\CartsController@index');
+    Route::post('carts', 'Api\CartsController@store');
+    Route::delete('carts', 'Api\CartsController@destroy');
+    Route::get('carts/confirm', 'Api\CartsController@confirm');
 
 
 //    Categories
-    Route::get('categories', 'API\CategoriesController@getFirstCategories');
+    Route::get('categories', 'Api\CategoriesController@getFirstCategories');
 
 //    Goods
-    Route::get('categories/{category}', 'API\GoodsController@getGoodsList');
-    Route::get('goods/{goods}', 'API\GoodsController@getGoodsDetail');
+    Route::get('categories/{category}', 'Api\GoodsController@getGoodsList');
+    Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 
 //    Users
-    Route::post('avatars', 'API\UsersController@uploadAvatar');
-    Route::put('info', 'API\UsersController@update');
+    Route::post('avatars', 'Api\UsersController@uploadAvatar');
+    Route::put('info', 'Api\UsersController@update');
 
 //    Addresses
-    Route::get('provinces', 'API\AddressesController@getProvinces');
-    Route::get('cities/{city}', 'API\AddressesController@getCities');
-    Route::get('areas/{area}', 'API\AddressesController@getAreas');
-    Route::get('addresses', 'API\AddressesController@index');
-    Route::post('addresses', 'API\AddressesController@store');
-    Route::put('addresses/{address}', 'API\AddressesController@update');
+    Route::get('provinces', 'Api\AddressesController@getProvinces');
+    Route::get('cities/{city}', 'Api\AddressesController@getCities');
+    Route::get('areas/{area}', 'Api\AddressesController@getAreas');
+    Route::get('addresses', 'Api\AddressesController@index');
+    Route::post('addresses', 'Api\AddressesController@store');
+    Route::put('addresses/{address}', 'Api\AddressesController@update');
 
 //    Coupons
-    Route::get('coupons', 'API\CouponsController@index');
-    Route::post('coupons/{coupon}', 'API\CouponsController@add');
+    Route::get('coupons', 'Api\CouponsController@index');
+    Route::post('coupons/{coupon}', 'Api\CouponsController@add');
 
 //    Orders
-    Route::get('orders', 'API\OrdersController@index');
-    Route::get('orders/{order}', 'API\OrdersController@show');
-    Route::post('orders', 'API\OrdersController@store');
+    Route::get('orders', 'Api\OrdersController@index');
+    Route::get('orders/{order}', 'Api\OrdersController@show');
+    Route::post('orders', 'Api\OrdersController@store');
 });
 
-Route::get('orders/{order}/alipay', 'API\OrdersController@alipay')->name('alipay');
+Route::get('orders/{order}/alipay', 'Api\OrdersController@alipay')->name('alipay');
