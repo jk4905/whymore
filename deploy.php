@@ -10,6 +10,7 @@ set('application', 'whymore');
 // Project repository
 set('repository', 'git@github.com:jk4905/whymore.git');
 
+set('branch', 'master');
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true);
 

@@ -27,16 +27,34 @@ class OrdersController extends Controller
         $this->cartService = $cartService;
     }
 
+    /**
+     * 订单列表
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         return $this->success(['list' => Order::query()->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get()]);
     }
 
+    /**
+     * 订单详情
+     *
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Order $order)
     {
         return $this->success(Order::with('items')->where('user_id', Auth::user()->id)->findOrFail($order->id));
     }
 
+    /**
+     * 保存订单
+     *
+     * @param Request $request
+     * @param OrderService $order
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request, OrderService $order)
     {
         $user = Auth::user();
@@ -77,18 +95,42 @@ class OrdersController extends Controller
         return $this->success(['redirect_url' => route('alipay', ['id' => $order->id])]);
     }
 
-
+    /**
+     * 跳转到支付宝
+     *
+     * @param Order $order
+     * @return mixed
+     * @throws InvalidRequestException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function alipay(Order $order)
     {
+//        dd(route('alipay.return'));
+        // 判断订单是否属于当前用户
+//        $this->authorize('own', $order);
+
         $order->checkPay();
         $data = [
             'out_trade_no' => $order->order_id,
             'total_amount' => sprintf("%.2f", $order->real_amount),
             'subject' => env('APP_PAY_NAME'),
         ];
-
-        return app('alipay')->wap($data);
+        return app('alipay')->web($data);
     }
 
 
+    // 前端回调页面
+    public function alipayReturn()
+    {
+        // 校验提交的参数是否合法
+        $data = app('alipay')->verify();
+        dd($data);
+    }
+
+    // 服务器端回调
+    public function alipayNotify()
+    {
+        $data = app('alipay')->verify();
+        \Log::debug('Alipay notify', $data->all());
+    }
 }

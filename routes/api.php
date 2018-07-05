@@ -60,3 +60,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 Route::get('orders/{order}/alipay', 'Api\OrdersController@alipay')->name('alipay');
+Route::post('orders/alipay/notify', 'Api\OrdersController@alipayNotify')->name('alipay.notify');
+Route::get('orders/alipay/return', 'Api\OrdersController@alipayReturn')->name('alipay.return');
+

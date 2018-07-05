@@ -61,16 +61,15 @@ class Order extends Model
         return false;
     }
 
+    /**
+     * @return bool
+     * @throws InvalidRequestException
+     */
     public function checkPay()
     {
         if ($this->status != 1) {
             throw new InvalidRequestException('订单状态错误');
         }
-
-//        if ($this->user_id != Auth::user()->id) {
-//            throw new InvalidRequestException('没有找到订单');
-//        }
-
         return true;
     }
 
