@@ -47,4 +47,9 @@ class Controller extends BaseController
             'data' => $data,
         ]);
     }
+
+    public function errorMsg($validationMsgArr)
+    {
+        return array_shift($validationMsgArr)[0];
+    }
 }

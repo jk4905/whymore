@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'Api\UsersController@login');
 Route::post('register', 'Api\UsersController@store');
 Route::post('sendSms', 'Api\UsersController@sendSms');
+//Route::post('add', 'Api\AddressesController@add');    // 添加省市区
 
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -43,8 +44,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 //    Addresses
     Route::get('provinces', 'Api\AddressesController@getProvinces');
-    Route::get('cities/{city}', 'Api\AddressesController@getCities');
-    Route::get('areas/{area}', 'Api\AddressesController@getAreas');
+    Route::get('cities/{district}', 'Api\AddressesController@getCities');
+    Route::get('areas/{district}', 'Api\AddressesController@getAreas');
     Route::get('addresses', 'Api\AddressesController@index');
     Route::post('addresses', 'Api\AddressesController@store');
     Route::put('addresses/{address}', 'Api\AddressesController@update');

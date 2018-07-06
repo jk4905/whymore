@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Models\Coupon;
 use App\Models\Goods;
 use App\Models\Order;
@@ -44,8 +45,9 @@ class CartsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function store(Request $request)
     {
@@ -56,7 +58,7 @@ class CartsController extends Controller
             'exists' => '没有此商品',
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
         // 获取购物车
         $this->cartInstance->restore(Auth::user()->id);
@@ -73,8 +75,9 @@ class CartsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function destroy(Request $request)
     {
@@ -84,7 +87,7 @@ class CartsController extends Controller
             'exists' => '没有此商品',
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 
         $this->delRowInCart($request->row_id);
@@ -125,7 +128,12 @@ class CartsController extends Controller
         return in_array($row, $rowIds);
     }
 
-
+    /**
+     * 删除
+     *
+     * @param $rows
+     * @return bool
+     */
     public function delRowInCart($rows)
     {
         try {
@@ -151,6 +159,7 @@ class CartsController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function confirm(Request $request)
     {
@@ -159,7 +168,7 @@ class CartsController extends Controller
         ]);
 //
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 //        // 获取购物车
         $this->cartInstance->restore(Auth::user()->id);

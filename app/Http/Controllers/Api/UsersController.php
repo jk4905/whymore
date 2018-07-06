@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
@@ -17,7 +18,8 @@ class UsersController extends Controller
     /**
      * login api
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function login()
     {
@@ -26,14 +28,16 @@ class UsersController extends Controller
             $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
             return $this->success($success);
         } else {
-            return $this->fail(40001);
+            throw new InvalidRequestException(40001);
         }
     }
 
     /**
      * Register api
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function store(Request $request)
     {
@@ -45,12 +49,12 @@ class UsersController extends Controller
             'unique' => '您已经注册过本网站了'
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 
         $redisCode = Redis::get('mobileCode' . $request->mobile);
         if ($redisCode != $request->code) {
-            return $this->fail(40004);
+            throw new InvalidRequestException(40004);
         }
 
         $input = $request->all();
@@ -64,7 +68,11 @@ class UsersController extends Controller
     }
 
     /**
-     * @param $mobile
+     * 发送验证码
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      * @throws \Overtrue\EasySms\Exceptions\InvalidArgumentException
      * @throws \Overtrue\EasySms\Exceptions\NoGatewayAvailableException
      */
@@ -76,37 +84,35 @@ class UsersController extends Controller
             'unique' => '您已经注册过本网站了'
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors()->toArray());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
         $code = rand(100000, 999999);
         // 时区很重要，服务器时区要一致
-        try {
 //            dd(date('Y-m-d H:i:s', time()));
-            $config = config('sms');
-            $easySms = new EasySms($config);
-            $ret = $easySms->send($request->mobile, [
-                'template' => 'SMS_75930058',
-                'data' => [
-                    // 这个键值是阿里云中定义的
-                    'number' => $code
-                ],
-            ]);
-            if ($ret['aliyun']['status'] == 'success' && $ret['aliyun']['result']['Code'] == 'OK') {
-                Redis::setex('mobileCode' . $request->mobile, 300, $code);
-                return $this->success([]);
-            } else {
-                return $this->fail(40003);
-            }
-        } catch (\Overtrue\EasySms\Exceptions\NoGatewayAvailableException $exception) {
-//            dd($exception->getExceptions());
-            $this->fail(40003);
+        $config = config('sms');
+        $easySms = new EasySms($config);
+        $ret = $easySms->send($request->mobile, [
+            'template' => 'SMS_75930058',
+            'data' => [
+                // 这个键值是阿里云中定义的
+                'number' => $code
+            ],
+        ]);
+        if ($ret['aliyun']['status'] == 'success' && $ret['aliyun']['result']['Code'] == 'OK') {
+            Redis::setex('mobileCode' . $request->mobile, 300, $code);
+            return $this->success([]);
+        } else {
+            throw new InvalidRequestException(40003);
         }
+
     }
 
     /**
      * 更新个人资料
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function update(Request $request)
     {
@@ -116,7 +122,7 @@ class UsersController extends Controller
             'avatar' => 'string|filled'
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors()->toArray());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 //        获得用户实例
         $user = Auth::user();
@@ -138,7 +144,11 @@ class UsersController extends Controller
 
     /**
      * 上传图片
+     *
      * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function uploadAvatar(Request $request, User $user)
     {
@@ -147,14 +157,14 @@ class UsersController extends Controller
             'avatar' => 'required|file',
         ]);
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors()->toArray());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
         $path = $request->file('avatar')->store('/');
         $realPath = public_path('upload/') . $path;
         $disk = Storage::disk('qiniu');
         $ret = $disk->put($path, file_get_contents($realPath));
         if (!$ret) {
-            return $this->fail(40005);
+            throw new InvalidRequestException(40005, $this->errorMsg($validator->errors()->messages()));
         }
         $url = $disk->getUrl($path);
 //        删除本地文件

@@ -54,6 +54,7 @@ class OrdersController extends Controller
      * @param Request $request
      * @param OrderService $order
      * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
     public function store(Request $request, OrderService $order)
     {
@@ -74,12 +75,12 @@ class OrdersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->fail(40002, $validator->errors());
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 
         $cartContent = $this->cartService->getContent();
         if ($cartContent->isEmpty()) {
-            return $this->fail(40008);
+            throw new InvalidRequestException(40008);
         }
         $cartContent = $cartContent->whereIn('rowId', $request->row_id);
 
