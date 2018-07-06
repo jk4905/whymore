@@ -55,7 +55,7 @@ class CartsController extends Controller
             'goods_id.*' => 'required|numeric|exists:goods,id,status,1',
 //            'qty' => 'required|numeric|min:1',
         ], [
-            'exists' => '没有此商品',
+            'exists' => '没有此商品或商品已下架',
         ]);
         if ($validator->fails()) {
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));

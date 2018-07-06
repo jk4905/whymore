@@ -22,6 +22,10 @@ Route::post('register', 'Api\UsersController@store');
 Route::post('sendSms', 'Api\UsersController@sendSms');
 //Route::post('add', 'Api\AddressesController@add');    // 添加省市区
 
+//    Goods
+Route::get('categories/{category}', 'Api\GoodsController@getGoodsList');
+Route::post('goods/search', 'Api\GoodsController@search');
+Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 
 Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
@@ -34,9 +38,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 //    Categories
     Route::get('categories', 'Api\CategoriesController@getFirstCategories');
 
-//    Goods
-    Route::get('categories/{category}', 'Api\GoodsController@getGoodsList');
-    Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 
 //    Users
     Route::post('avatars', 'Api\UsersController@uploadAvatar');

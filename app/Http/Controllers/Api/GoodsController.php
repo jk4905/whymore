@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 
 class GoodsController extends Controller
 {
+    const PAGINATE = 20;
+
     public function show()
     {
         return $this->success(Goods::all());
@@ -17,38 +19,22 @@ class GoodsController extends Controller
     public function getGoodsList(Category $category)
     {
         $categoryList = Category::with(['goods' => function ($query) {
-            $query->orderBy('sales', 'desc');
+            $query->where('status', 1)->orderBy('sales', 'desc');
         }])->where('pid', $category->id)->get();
         return $this->success(compact('categoryList'));
     }
 
-    /**
-     * 获取商品列表
-     * @param Category $category
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getGoodsListBack1(Category $category)
+    public function search(Request $request)
     {
-        $categoryList = Category::with('goods')->where('pid', $category->id)->get();
-//        $categoryList = $category->allChildrenCategories;
-        return $this->success(compact('categoryList'));
-    }
-
-    public function getGoodsListBack2(Category $category)
-    {
-        $categoryList = Category::where('pid', $category->id)->get();
-//        foreach ($categoryList as $k => $category) {
-//            $categoryList[$k] = Category::with(['goods' => function ($query) {
-//                $query->where('status', 1)->orderBy('sort', 'desc');
-//            }])->where('id', $category->id)->get();
-//        }
-        $categoryList->transform(function ($item, $key) {
-            $item['goodsList'] = Category::with(['goods' => function ($query) {
-                $query->where('status', 1)->orderBy('sort', 'desc');
-            }])->where('id', $item->id)->get();
-            return $item['goodsList'];
-        });
-        return $this->success($categoryList);
+        $builder = Goods::query()->where('status', 1);
+        if (!empty($request->q)) {
+            $like = '%' . $request->q . '%';
+            $builder->where(function ($query) use ($like) {
+                $query->where('name', 'like', $like)->orWhere('description', 'like', $like)->orWhere('keyword', 'like', $like);
+            });
+        }
+        $list = $builder->orderByDesc('sort')->paginate(self::PAGINATE);
+        return $this->success(compact('list'));
     }
 
     /**
