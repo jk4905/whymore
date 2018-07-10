@@ -23,27 +23,20 @@ class InternalException extends Exception
 
     public function render(Request $request)
     {
-        if ($request->expectsJson()) {
-            $message = '';
-            if (empty($this->msgForUser)) {
-                $message = config('errorcode.code')[(int)$this->code];
-            } else {
-                if (is_object($this->msgForUser)) {
-                    $this->msgForUser = $this->msgForUser->toArray();
-                }
-                $err = array_shift($this->msgForUser);
-                $message = array_shift($err);
-            }
+        if (empty($this->message)) {
+            $this->message = config('errorcode.code')[(int)$this->code];
+        }
 
+        if ($request->expectsJson()) {
             return response()->json([
                 'status' => false,
                 'code' => $this->code,
                 'message' => $this->msgForUser,
-                'data' => $message,
+                'data' => $this->message,
             ]);
         }
 
-        return view('pages.error', ['msg' => $this->msgForUser]);
+        return view('pages.error', ['msg' => $this->message]);
     }
 
 }
