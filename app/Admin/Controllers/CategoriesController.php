@@ -54,14 +54,12 @@ class CategoriesController extends Controller
 
     public function treeView()
     {
-//        return Category::tree(function (Tree $tree) {
-        $a = Category::tree(function (Tree $tree) {
+        return Category::tree(function (Tree $tree) {
             $tree->branch(function ($branch) {
                 $payload = "<strong>{$branch['name']}</strong>";
                 return $payload;
             });
         });
-        return $a;
     }
 
     /**
@@ -107,7 +105,6 @@ class CategoriesController extends Controller
         return Admin::grid(Category::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
 
             $grid->created_at();
             $grid->updated_at();
