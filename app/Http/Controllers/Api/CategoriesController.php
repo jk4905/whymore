@@ -11,7 +11,7 @@ class CategoriesController extends Controller
     public function getFirstCategories()
     {
         $categories = new Category();
-        return $this->success($categories->where('pid', 0)->orderBy('sort', 'desc')->get());
+        return $this->success($categories->where('pid', 0)->orderBy('sort', 'asc')->get());
     }
 
     public function test()
