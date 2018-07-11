@@ -27,17 +27,15 @@ Route::get('categories/{category}', 'Api\GoodsController@getGoodsList');
 Route::post('goods/search', 'Api\GoodsController@search');
 Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 
+//    Categories
+Route::get('categories', 'Api\CategoriesController@getFirstCategories');
+
 Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
     Route::get('carts', 'Api\CartsController@index');
     Route::post('carts', 'Api\CartsController@store');
     Route::delete('carts', 'Api\CartsController@destroy');
     Route::get('carts/confirm', 'Api\CartsController@confirm');
-
-
-//    Categories
-    Route::get('categories', 'Api\CategoriesController@getFirstCategories');
-
 
 //    Users
     Route::post('avatars', 'Api\UsersController@uploadAvatar');
