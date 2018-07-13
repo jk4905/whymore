@@ -15,7 +15,6 @@ class CreateGoodsTable extends Migration
     {
         Schema::create('goods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('category_id')->comment('类型');
             $table->string('name', 100)->comment('商品名');
             $table->string('description', 256)->comment('描述');
             $table->string('image', 256)->comment('图片');

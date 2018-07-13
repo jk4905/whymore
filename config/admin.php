@@ -71,8 +71,8 @@ return [
         'disk' => 'qiniu',
 
         'directory' => [
-            'image' => 'images',
-            'file' => 'files',
+            'image' => '',
+            'file' => '',
         ],
     ],
 
@@ -141,7 +141,7 @@ return [
     |---------------------------------------------------------|
      */
 //    'layout' => ['sidebar-mini', 'sidebar-collapse'],
-    'layout' => ['fixed','sidebar-mini'],
+    'layout' => ['fixed', 'sidebar-mini'],
 
     /*
      * Background image in login page

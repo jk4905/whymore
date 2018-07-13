@@ -70,6 +70,19 @@ return [
             'domain' => env('QINIU_DOMAIN', 'xxx.clouddn.com'), // or host: https://xxxx.clouddn.com
         ],
 
+//        'qiniuadmin' => [
+//            'driver' => 'qiniu',
+//            'domains' => [
+//                'default' => env('QINIU_DOMAIN', 'xxx.clouddn.com'), //你的七牛域名
+//                'https' => env('QINIU_DOMAIN', 'xxx.clouddn.com'),         //你的HTTPS域名
+//                'custom' => 'static.abc.com',                //Useless 没啥用，请直接使用上面的 default 项
+//            ],
+//            'access_key' => env('QINIU_ACCESS_KEY', 'xxxxxxxxxxxxxxxx'),  //AccessKey
+//            'secret_key' => env('QINIU_SECRET_KEY', 'xxxxxxxxxxxxxxxx'),  //SecretKey
+//            'bucket' => env('QINIU_BUCKET', 'test'),  //Bucket名字
+//            'notify_url' => '',  //持久化处理回调地址
+//            'access' => 'public'  //空间访问控制 public 或 private
+//        ],
     ],
 
 ];

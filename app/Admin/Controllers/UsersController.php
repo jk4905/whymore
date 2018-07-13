@@ -58,7 +58,7 @@ class UsersController extends Controller
             $disk = $this->disk;
 
             $grid->avatar('头像')->display(function ($value) use ($disk) {
-                return $value ? $disk->getUrl($value) : '';
+                return $value ? $disk->url($value) : '';
             })->image('', 40, 40);
 
             $grid->created_at('注册时间');
