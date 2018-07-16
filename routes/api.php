@@ -30,6 +30,9 @@ Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 //    Categories
 Route::get('categories', 'Api\CategoriesController@getFirstCategories');
 
+//    banners
+Route::get('banners', 'Api\BannersController@index');
+
 Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
     Route::get('carts', 'Api\CartsController@index');

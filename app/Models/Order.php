@@ -22,6 +22,16 @@ class Order extends Model
         2 => '微信'
     ];
 
+//    状态，1-未付款，2-已付款，3-未发货，4-已发货，5-交易完成，6-交易关闭
+    public static $status = [
+        1 => '未付款',
+        2 => '已付款',
+        3 => '未发货',
+        4 => '已发货',
+        5 => '交易完成',
+        6 => '交易关闭',
+    ];
+
     public static $freight = 10;
 
     protected $guarded = [
@@ -38,6 +48,10 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function coupon()
+    {
+        return $this->hasOne(Coupon::class, 'id', 'coupon_id');
+    }
 
     /**
      * 生成订单号

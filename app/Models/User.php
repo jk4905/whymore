@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -47,5 +49,14 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function getAvatarAttribute()
+    {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
+            return $this->attributes['avatar'];
+        }
+        $disk = Storage::disk('qiniu');
+        return $disk->url($this->attributes['avatar']);
     }
 }

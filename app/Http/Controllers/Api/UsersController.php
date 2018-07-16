@@ -152,7 +152,6 @@ class UsersController extends Controller
      */
     public function uploadAvatar(Request $request, User $user)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|file',
         ]);
@@ -162,11 +161,12 @@ class UsersController extends Controller
         $path = $request->file('avatar')->store('/');
         $realPath = public_path('upload/') . $path;
         $disk = Storage::disk('qiniu');
+
         $ret = $disk->put($path, file_get_contents($realPath));
         if (!$ret) {
-            throw new InvalidRequestException(40005, $this->errorMsg($validator->errors()->messages()));
+            throw new InvalidRequestException(40005);
         }
-        $url = $disk->getUrl($path);
+        $url = $disk->url($path);
 //        删除本地文件
         unlink($realPath);
         return $this->success(['avatar' => $path, 'preview' => $url]);

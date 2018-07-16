@@ -5,6 +5,8 @@ namespace App\Models;
 use Encore\Admin\Traits\AdminBuilder;
 use Encore\Admin\Traits\ModelTree;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
@@ -58,5 +60,14 @@ class Category extends Model
 //        第四个参数，关联模型在中间表的id,
 //        return $this->belongsToMany(Goods::class,'category_goods','category_id','goods_id');
         return $this->belongsToMany(Goods::class);
+    }
+
+    public function getImageAttribute()
+    {
+        if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
+            return $this->attributes['image'];
+        }
+        $disk = Storage::disk('qiniu');
+        return $disk->url($this->attributes['image']);
     }
 }

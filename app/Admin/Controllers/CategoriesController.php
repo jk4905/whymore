@@ -138,4 +138,6 @@ class CategoriesController extends Controller
             $form->text('name', '分类名称')->rules('required');
         });
     }
+
+
 }
