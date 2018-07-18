@@ -39,9 +39,12 @@ class CategoriesController extends Controller
                     $form = new \Encore\Admin\Widgets\Form();
                     $form->action(admin_base_path('categories'));
 
-
                     $form->text('name', '类型名称')->rules(['required']);
-                    $form->number('sort', '排序序号');
+
+                    $form->image('image', '图片')->uniqueName();
+
+                    $form->number('sort', '排序序号')->default(0)->rules(['numeric']);
+
                     $form->select('pid', '父类名称')->options(Category::selectOptions());
 
                     $form->hidden('_token')->default(csrf_token());
@@ -55,8 +58,11 @@ class CategoriesController extends Controller
     public function treeView()
     {
         return Category::tree(function (Tree $tree) {
+            $tree->query(function ($model) {
+                return $model->where('status', 1)->orderByDesc('sort');
+            });
             $tree->branch(function ($branch) {
-                $payload = "<strong>{$branch['name']}</strong>";
+                $payload = "<img class='img' src='{$branch['image']}' style='width: 30px;'><strong>{$branch['name']}</strong>";
                 return $payload;
             });
         });
@@ -124,6 +130,7 @@ class CategoriesController extends Controller
             // 创建一个输入框，第一个参数 title 是模型的字段名，第二个参数是该字段描述
             $form->text('name', '分类名称')->rules('required');
             $form->number('sort', '排序')->rules('required');
+            $form->image('image', '图片')->uniqueName();
             $form->number('pid', '父级');
 
             $form->display('created_at', 'Created At');
@@ -134,8 +141,10 @@ class CategoriesController extends Controller
     protected function editForm()
     {
         return Admin::form(Category::class, function (Form $form) {
+            $form->display('id', 'ID');
             // 创建一个输入框，第一个参数 title 是模型的字段名，第二个参数是该字段描述
             $form->text('name', '分类名称')->rules('required');
+            $form->image('image', '图片')->uniqueName();
         });
     }
 

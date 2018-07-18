@@ -23,12 +23,13 @@ Route::post('sendSms', 'Api\UsersController@sendSms');
 //Route::post('add', 'Api\AddressesController@add');    // 添加省市区
 
 //    Goods
-Route::get('categories/{category}', 'Api\GoodsController@getGoodsList');
+Route::get('goods', 'Api\GoodsController@index');
 Route::post('goods/search', 'Api\GoodsController@search');
 Route::get('goods/{goods}', 'Api\GoodsController@getGoodsDetail');
 
 //    Categories
 Route::get('categories', 'Api\CategoriesController@getFirstCategories');
+Route::get('categories/{category}', 'Api\CategoriesController@getGoodsList');
 
 //    banners
 Route::get('banners', 'Api\BannersController@index');

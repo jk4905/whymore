@@ -16,12 +16,10 @@ class GoodsController extends Controller
         return $this->success(Goods::all());
     }
 
-    public function getGoodsList(Category $category)
+    public function index()
     {
-        $categoryList = Category::with(['goods' => function ($query) {
-            $query->where('status', 1)->orderBy('sales', 'desc');
-        }])->where('pid', $category->id)->get();
-        return $this->success(compact('categoryList'));
+        $list = Goods::query()->whereStatus(1)->orderByDesc('sort')->paginate(self::PAGINATE);
+        return $this->success(compact('list'));
     }
 
     public function search(Request $request)

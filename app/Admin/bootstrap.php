@@ -32,11 +32,11 @@ use Encore\Admin\Grid\Column;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 
-Form::extend('editor', WangEditor::class);
+//Form::extend('editor', WangEditor::class);
 
-Admin::css('/vendor/prism/prism.css');
-Admin::js('/vendor/prism/prism.js');
-Admin::js('/vendor/clipboard/dist/clipboard.min.js');
+//Admin::css('/vendor/prism/prism.css');
+//Admin::js('/vendor/prism/prism.js');
+//Admin::js('/vendor/clipboard/dist/clipboard.min.js');
 
 Column::extend('expand', ExpandRow::class);
 Column::extend('openMap', OpenMap::class);

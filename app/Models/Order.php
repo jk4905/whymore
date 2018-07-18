@@ -6,7 +6,7 @@ use App\Exceptions\InvalidRequestException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Order extends Model
+class Order extends Base
 {
 //    快递类型
     public static $shippingKey = [1, 2];

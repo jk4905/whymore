@@ -6,14 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Banner extends Model
+class Banner extends Base
 {
-    public function getImageAttribute()
-    {
-        if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
-            return $this->attributes['image'];
-        }
-        $disk = Storage::disk('qiniu');
-        return $disk->url($this->attributes['image']);
-    }
+
 }

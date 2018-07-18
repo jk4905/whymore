@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class Coupon extends Model
+class Coupon extends Base
 {
     public function users()
     {

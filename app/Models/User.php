@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://']) || empty($this->attributes['avatar'])) {
             return $this->attributes['avatar'];
         }
         $disk = Storage::disk('qiniu');

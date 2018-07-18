@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Category extends Model
+class Category extends Base
 {
     use ModelTree, AdminBuilder;
 
@@ -62,12 +62,5 @@ class Category extends Model
         return $this->belongsToMany(Goods::class);
     }
 
-    public function getImageAttribute()
-    {
-        if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
-            return $this->attributes['image'];
-        }
-        $disk = Storage::disk('qiniu');
-        return $disk->url($this->attributes['image']);
-    }
+
 }
