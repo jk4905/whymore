@@ -76,7 +76,8 @@ class OrderService
      *
      * @param $amount
      * @param $couponId
-     * @return array|\Illuminate\Http\JsonResponse
+     * @return array
+     * @throws InvalidRequestException
      */
     public function getRealAmountAndDiscount($amount, $couponId)
     {

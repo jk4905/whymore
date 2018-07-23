@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 //    Carts
     Route::get('carts', 'Api\CartsController@index');
     Route::post('carts', 'Api\CartsController@store');
+    Route::put('carts', 'Api\CartsController@update');
     Route::delete('carts', 'Api\CartsController@destroy');
     Route::get('carts/confirm', 'Api\CartsController@confirm');
 

@@ -16,4 +16,5 @@ Route::group([
     $router->resource('goods', GoodsController::class);
     $router->resource('orders', OrdersController::class);
     $router->resource('streamers', StreamersController::class);
+    $router->resource('coupons', CouponsController::class);
 });

@@ -4,11 +4,20 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Category;
 use App\Models\Goods;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class GoodsController extends Controller
 {
+    public $cartService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->cartService = new CartService();
+    }
+
     const PAGINATE = 20;
 
     public function show()

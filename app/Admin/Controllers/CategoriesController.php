@@ -29,7 +29,7 @@ class CategoriesController extends Controller
         return Admin::content(function (Content $content) {
 
             $content->header('商品分类');
-            $content->description('商品分类');
+            $content->description('列表');
 
 //            $content->body();
             $content->row(function (Row $row) {
@@ -78,8 +78,8 @@ class CategoriesController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('修改商品分类');
-            $content->description('修改商品分类');
+            $content->header('商品分类');
+            $content->description('编辑');
 
             $content->body($this->editForm()->edit($id));
         });
@@ -94,8 +94,8 @@ class CategoriesController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('添加商品分类');
-            $content->description('添加商品分类');
+            $content->header('商品分类');
+            $content->description('新增');
             // 添加text类型的input框
             $content->body($this->form());
         });

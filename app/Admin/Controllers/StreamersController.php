@@ -27,8 +27,8 @@ class StreamersController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('轮播图列表');
-            $content->description('轮播图列表');
+            $content->header('轮播图');
+            $content->description('列表');
 
             $content->body($this->grid());
         });
@@ -44,8 +44,8 @@ class StreamersController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('编辑轮播图');
-            $content->description('编辑轮播图');
+            $content->header('轮播图');
+            $content->description('编辑');
 
             $content->body($this->form()->edit($id));
         });
@@ -60,8 +60,8 @@ class StreamersController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('新建轮播图');
-            $content->description('新建轮播图');
+            $content->header('轮播图');
+            $content->description('新建');
 
             $content->body($this->form());
         });
@@ -96,7 +96,7 @@ class StreamersController extends Controller
                 $filter->disableIdFilter();
 
                 // 在这里添加字段过滤器
-                $filter->like('name', '商品名');
+                $filter->like('name', '名称');
 
                 $filter->equal('can_redirect')->select(self::$can_redirect);
 

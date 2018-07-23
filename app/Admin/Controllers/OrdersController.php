@@ -26,43 +26,10 @@ class OrdersController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('订单列表');
-            $content->description('订单列表');
+            $content->header('订单');
+            $content->description('列表');
 
             $content->body($this->grid());
-        });
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param $id
-     * @return Content
-     */
-    public function edit($id)
-    {
-        return Admin::content(function (Content $content) use ($id) {
-
-            $content->header('header');
-            $content->description('description');
-
-            $content->body($this->form()->edit($id));
-        });
-    }
-
-    /**
-     * Create interface.
-     *
-     * @return Content
-     */
-    public function create()
-    {
-        return Admin::content(function (Content $content) {
-
-            $content->header('header');
-            $content->description('description');
-
-            $content->body($this->form());
         });
     }
 
@@ -168,6 +135,36 @@ class OrdersController extends Controller
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
                 $actions->disableEdit();
+            });
+
+            $grid->filter(function ($filter) {
+
+                // 在这里添加字段过滤器
+                $filter->like('order_id', '订单号');
+
+                $filter->like('name', '昵称');
+
+                $filter->like('address', '地址');
+
+                $filter->equal('user_id', '用户id');
+
+                $filter->equal('mobile', '手机号')->mobile();
+
+                $filter->between('real_amount', '订单金额');
+
+                $filter->between('real_amount', '实际支付金额');
+
+                $filter->equal('status', '状态')->select(Order::$status);
+
+                $filter->equal('payent_type', '支付类型')->select(Order::$paymentType);
+
+                $filter->equal('shipping_type', '配送方式')->select(Order::$shippingType);
+
+                $filter->between('paid_at', '支付时间')->datetime();
+
+                $filter->between('created_at', '创建时间')->datetime();
+
+                $filter->between('shipped_at', '发货时间')->datetime();
             });
         });
     }

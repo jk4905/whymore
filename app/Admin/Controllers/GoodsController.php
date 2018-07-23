@@ -26,8 +26,8 @@ class GoodsController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('商品列表');
-            $content->description('商品列表');
+            $content->header('商品');
+            $content->description('列表');
 
             $content->body($this->grid());
         });
@@ -43,8 +43,8 @@ class GoodsController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('编辑商品');
-            $content->description('编辑商品');
+            $content->header('商品');
+            $content->description('编辑');
 
             $content->body($this->form()->edit($id));
         });
@@ -59,8 +59,8 @@ class GoodsController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('新建商品');
-            $content->description('新建商品');
+            $content->header('商品');
+            $content->description('新增');
 
             $content->body($this->form());
         });
@@ -93,19 +93,31 @@ class GoodsController extends Controller
 
             $grid->status('状态')->editable('select', self::$status);
 
-            $grid->filter(function ($filter) {
+            $grid->created_at('创建时间')->sortable();
+            $grid->updated_at('修改时间')->sortable();
 
-                // 去掉默认的id过滤器
-                $filter->disableIdFilter();
+            $grid->filter(function ($filter) {
 
                 // 在这里添加字段过滤器
                 $filter->like('name', '商品名');
 
-                $filter->equal('status')->select(self::$status);
+                $filter->equal('status','状态')->select(self::$status);
             });
 
-            $grid->created_at('创建时间')->sortable();
-            $grid->updated_at('修改时间')->sortable();
+            $grid->filter(function ($filter) {
+
+                // 在这里添加字段过滤器
+                $filter->like('name', '商品名');
+
+                $filter->between('sales', '销售量');
+
+                $filter->between('sale_price', '售价');
+
+                $filter->keyword('keyword', '关键字');
+
+                $filter->equal('status','状态')->select(self::$status);
+
+            });
         });
     }
 
@@ -124,7 +136,7 @@ class GoodsController extends Controller
 
             $form->text('description', '描述');
 
-            $form->image('image', '图片')->uniqueName();
+            $form->multipleImage('image', '图片')->removable();
 
             $form->number('sale_price', '售价');
 

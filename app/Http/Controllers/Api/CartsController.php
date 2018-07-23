@@ -6,6 +6,7 @@ use App\Exceptions\InvalidRequestException;
 use App\Models\Coupon;
 use App\Models\Goods;
 use App\Models\Order;
+use App\Services\CartService;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,13 +20,16 @@ class CartsController extends Controller
     protected static $cart = 'shopping_cart';
     public $cartInstance;
     public $disk;
+    protected $cartService;
+    public $goodsModel;
 
-
-    public function __construct()
+    public function __construct(CartService $cartService)
     {
         parent::__construct();
+        $this->cartService = $cartService;
         $this->cartInstance = Cart::instance(self::$cart);
         $this->disk = Storage::disk('qiniu');
+        $this->goodsModel = new Goods();
     }
 
     /**
@@ -38,7 +42,7 @@ class CartsController extends Controller
         $this->cartInstance->restore(Auth::user()->id);
         $this->cartInstance->store(Auth::user()->id);
         $content = $this->cartInstance->content();
-        return $this->success(['list' => $this->getGoodsList($content)]);
+        return $this->success(['list' => $this->cartService->getGoodsList($content)]);
     }
 
 
@@ -73,6 +77,27 @@ class CartsController extends Controller
     }
 
     /**
+     * 更新购物车
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
+     */
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'row_id.*' => 'required|numeric',
+            'qty' => 'required|numeric|min:1',
+        ]);
+        if ($validator->fails()) {
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
+        }
+
+        $this->cartService->update($request->all());
+        return $this->success();
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Request $request
@@ -92,28 +117,6 @@ class CartsController extends Controller
 
         $this->delRowInCart($request->row_id);
         return $this->success();
-    }
-
-    /**
-     * 通过购物车获取商品列表
-     * @param $content
-     * @return array
-     */
-    public function getGoodsList($content)
-    {
-        $goodsList = [];
-        foreach ($content as $key => $row) {
-            $goods = $row->model->toArray();
-            if ($goods['status'] == 2) {
-                unset($content[$key]);
-                continue;
-            }
-            $goods['image'] = $this->disk->getUrl($goods['image']);
-            $goods['row_id'] = $row->rowId;
-            $goods['qty'] = $row->qty;
-            $goodsList[] = $goods;
-        }
-        return $goodsList;
     }
 
     /**
