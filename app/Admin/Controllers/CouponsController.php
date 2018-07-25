@@ -110,9 +110,9 @@ class CouponsController extends Controller
                 // 在这里添加字段过滤器
                 $filter->like('name', '优惠券名');
 
-                $filter->equal('status','状态')->select(self::$status);
+                $filter->equal('status', '状态')->select(self::$status);
 
-                $filter->equal('type','类型')->select(self::$type);
+                $filter->equal('type', '类型')->select(self::$type);
             });
         });
     }

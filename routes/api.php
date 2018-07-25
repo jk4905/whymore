@@ -43,8 +43,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('carts/confirm', 'Api\CartsController@confirm');
 
 //    Users
-    Route::post('avatars', 'Api\UsersController@uploadAvatar');
-    Route::put('info', 'Api\UsersController@update');
+    Route::get('user', 'Api\UsersController@index');
+    Route::post('user/upload', 'Api\UsersController@uploadAvatar');
+    Route::put('user', 'Api\UsersController@update');
 
 //    Addresses
     Route::get('provinces', 'Api\AddressesController@getProvinces');

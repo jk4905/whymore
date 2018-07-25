@@ -171,4 +171,9 @@ class UsersController extends Controller
         unlink($realPath);
         return $this->success(['avatar' => $path, 'preview' => $url]);
     }
+
+    public function index()
+    {
+        return $this->success(Auth::user());
+    }
 }
