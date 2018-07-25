@@ -13,4 +13,5 @@ class Address extends Base
     {
         return $this->province_name . $this->city_name . $this->area_name . $this->detailed_address;
     }
+
 }

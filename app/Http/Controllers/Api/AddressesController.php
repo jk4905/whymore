@@ -124,10 +124,15 @@ class AddressesController extends Controller
             throw new InvalidRequestException(40301);
         }
 
+        if (in_array('is_default', array_keys($request->all()))) {
+            $this->setIsDefaultToFalse();
+            $address = Address::query()->findOrFail($address->id);
+        }
+
         foreach ($request->all() as $k => $v) {
             $address->$k = $v;
         }
-
+//        dd($address);
         $address->save();
         return $this->success([]);
     }
@@ -152,5 +157,33 @@ class AddressesController extends Controller
         unlink($realPath);
         dd($a);
         exit;
+    }
+
+    /**
+     * 删除地址
+     *
+     * @param Address $address
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(Address $address)
+    {
+        $address->delete();
+        return $this->success([]);
+    }
+
+    /**
+     * 将全部地址设为否
+     *
+     * @return mixed
+     */
+    public function setIsDefaultToFalse()
+    {
+        return Address::query()->whereIsDefault('1')->whereUserId(Auth::user()->id)->update(['is_default' => 2]);
+    }
+
+    public function view(Address $address)
+    {
+        return $this->success($address);
     }
 }

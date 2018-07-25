@@ -52,8 +52,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('cities/{district}', 'Api\AddressesController@getCities');
     Route::get('areas/{district}', 'Api\AddressesController@getAreas');
     Route::get('addresses', 'Api\AddressesController@index');
+    Route::get('addresses/{address}', 'Api\AddressesController@view');
     Route::post('addresses', 'Api\AddressesController@store');
     Route::put('addresses/{address}', 'Api\AddressesController@update');
+    Route::delete('addresses/{address}', 'Api\AddressesController@destroy');
 
 //    Coupons
     Route::get('coupons', 'Api\CouponsController@index');
