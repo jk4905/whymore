@@ -36,7 +36,6 @@ class CartService
      */
     public function getGoodsList($content)
     {
-        $this->searchById(2);
         $goodsList = [];
         foreach ($content as $key => $row) {
             $goods = $row->model->toArray();

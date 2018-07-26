@@ -56,8 +56,8 @@ class CartsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'goods_id.*' => 'required|numeric|exists:goods,id,status,1',
-//            'qty' => 'required|numeric|min:1',
+            'goods.*.id' => 'required|numeric|exists:goods,id,status,1',
+            'goods.*.qty' => 'required|numeric|min:1',
         ], [
             'exists' => '没有此商品或商品已下架',
         ]);
@@ -66,10 +66,10 @@ class CartsController extends Controller
         }
         // 获取购物车
         $this->cartInstance->restore(Auth::user()->id);
-        foreach ($request->goods_id as $goodsId) {
-            $goods = Goods::findOrFail($goodsId);
+        foreach ($request->goods as $item) {
+            $goods = Goods::findOrFail($item['id']);
             // 添加购物车
-            $this->cartInstance->add(['id' => $goods->id, 'name' => $goods->name, 'qty' => 1, 'price' => $goods->sale_price])->associate(Goods::class);
+            $this->cartInstance->add(['id' => $goods->id, 'name' => $goods->name, 'qty' => $item['qty'], 'price' => $goods->sale_price])->associate(Goods::class);
         }
         // 保存购物车
         $this->cartInstance->store(Auth::user()->id);
