@@ -2,12 +2,19 @@
 
 namespace App\Models;
 
+use App\Services\CartService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Goods extends Base
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function category()
     {
         return $this->belongsTo('App\Models\Category', 'id', 'category_id');
@@ -28,7 +35,6 @@ class Goods extends Base
     {
         return $this->getImageFullUrl($this->attributes['image']);
     }
-
 
     public function setImageAttribute($image)
     {
@@ -55,4 +61,6 @@ class Goods extends Base
         }
         return $images;
     }
+
+
 }

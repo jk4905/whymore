@@ -24,10 +24,36 @@ class CartService
     public function getContent()
     {
         $user = Auth::user();
+        if (empty($user->id)) {
+            $user = Auth::guard('api')->user();
+        }
         $this->cartInstance->restore($user->id);
         $this->cartInstance->store($user->id);
         return $this->cartInstance->content();
     }
+
+    /**
+     * 购物车字典
+     *
+     * @return mixed
+     */
+    public function getCartDict()
+    {
+        if (empty(Auth::guard('api')->user())) {
+            return [];
+        }
+        $cart = $this->getContent();
+        $cartDict = $cart->mapWithKeys(function ($item) {
+            return [$item->id => [
+                'goods_id' => $item->id,
+                'row_id' => $item->rowId,
+                'qty' => $item->qty,
+                'name' => $item->name
+            ]];
+        });
+        return $cartDict->toArray();
+    }
+
 
     /**
      * 通过购物车获取商品列表
@@ -107,12 +133,25 @@ class CartService
         return true;
     }
 
-    public function getCartQty($goods)
+
+    /**
+     * 得到购物车中的数量和购物车商品 id
+     *
+     * @param $list
+     * @return LengthAwarePaginator
+     */
+    public function getQtyAndRowId($list)
     {
-        return $goods->each(function ($item) {
-            $cartGoods = $this->search($item['id'], 'id');
-            $item['qty'] = $cartGoods['qty'] ?: 0;
+        $cartDict = $this->getCartDict();
+        if (empty($cartDict)) {
+            return $list;
+        }
+        $newList = $list->each(function ($item) use ($cartDict) {
+            $item->row_id = empty($cartDict[$item->id]) ? 0 : $cartDict[$item->id]['row_id'];
+            $item->qty = empty($cartDict[$item->id]) ? 0 : $cartDict[$item->id]['qty'];
             return $item;
         });
+
+        return $newList;
     }
 }

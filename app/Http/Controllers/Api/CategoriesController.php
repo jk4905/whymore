@@ -4,11 +4,20 @@ namespace App\Http\Controllers\API;
 
 use App\Exceptions\InvalidRequestException;
 use App\Models\Category;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {
+    public $cartService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->cartService = new CartService();
+    }
+
     public function getFirstCategories()
     {
         $categories = new Category();
@@ -35,6 +44,15 @@ class CategoriesController extends Controller
         $categoryList = Category::with(['goods' => function ($query) {
             $query->where('status', 1)->orderBy('sales', 'desc');
         }])->where('pid', $category->id)->get();
+        $categoryList = $this->getQtyAndRowId($categoryList);
         return $this->success(compact('categoryList'));
+    }
+
+    public function getQtyAndRowId($categoryList)
+    {
+        $categoryList->each(function (&$item) {
+            $this->cartService->getQtyAndRowId($item->goods);
+        });
+        return $categoryList;
     }
 }
