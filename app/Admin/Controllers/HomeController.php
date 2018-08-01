@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Column;
@@ -15,25 +16,26 @@ class HomeController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('Dashboard');
-            $content->description('Description...');
+            $content->header('首页');
+            $content->description('');
+            if (Admin::user()->isAdministrator()) {
+                $content->row(Dashboard::title());
 
-            $content->row(Dashboard::title());
+                $content->row(function (Row $row) {
 
-            $content->row(function (Row $row) {
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::environment());
+                    });
 
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::environment());
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::extensions());
+                    });
+
+                    $row->column(4, function (Column $column) {
+                        $column->append(Dashboard::dependencies());
+                    });
                 });
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::extensions());
-                });
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::dependencies());
-                });
-            });
+            }
         });
     }
 }
