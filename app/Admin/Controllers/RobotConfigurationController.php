@@ -166,8 +166,8 @@ class RobotConfigurationController extends Controller
             $form->text('not_key_words_msg', '未有关键字回复')->rules('nullable|string');
 
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('transmit_length', '转发内容长度')->rules('integer|min:0');
-                $form->text('transmit_length_wrong_msg', '转发内容长度不达标回复')->rules('nullable|string');
+                $form->number('transmit_length', '转发内容长度')->default(10)->rules('integer|min:0');
+                $form->text('transmit_length_wrong_msg', '转发内容长度不达标回复')->default('消息太简短不够10字节，请重新编辑你的消息哟！')->rules('nullable|string');
             } else {
                 $form->display('transmit_length', '转发内容长度');
                 $form->display('transmit_length_wrong_msg', '转发内容长度不达标回复');
@@ -180,8 +180,8 @@ class RobotConfigurationController extends Controller
                 $form->number('achieve_level', '达标等级')->rules('integer|min:0');
                 $form->text('not_achieve_level_msg', '不达标等级回复')->rules('nullable|string');
                 $form->number('invalid_begin_at', '机器人无效开始时间')->rules('integer|min:0');
-                $form->number('invalid_end_at', '机器人无效结束时间')->rules('integer|min:0');
-                $form->number('transmit_delay', '转发延迟时间（单位：ms）')->rules('integer|min:0');
+                $form->number('invalid_end_at', '机器人无效结束时间')->default(4)->rules('integer|min:0');
+                $form->number('transmit_delay', '转发延迟时间（单位：ms）')->default(200)->rules('integer|min:0');
             } else {
                 $form->display('achieve_level', '达标等级');
                 $form->display('not_achieve_level_msg', '不达标等级回复');
@@ -197,7 +197,7 @@ class RobotConfigurationController extends Controller
 
             $form->number('send_score', '发布一次所需积分')->rules('integer|min:0');
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('recharge_score', '充值一元获得积分')->rules('integer|min:0');
+                $form->number('recharge_score', '充值一元获得积分')->default(10)->rules('integer|min:0');
             } else {
                 $form->display('recharge_score', '充值一元获得积分');
             }
@@ -208,11 +208,11 @@ class RobotConfigurationController extends Controller
 
             if (Admin::user()->can('robot_configuration_manage')) {
                 $form->number('remove_blank_list_count', '解除黑名单所需积分')->rules('integer|min:0');
-                $form->text('remove_blank_list_msg', '解除黑名单成功回复')->rules('nullable|string');
+                $form->text('remove_blank_list_msg', '解除黑名单成功回复')->default('消耗三积分，已经自动为您解除黑名单，请你注意发布消息的质量哦！')->rules('nullable|string');
 
 //            $form->textarea('menu', '菜单')->rules('');
 
-                $form->radio('status', '状态')->options(self::$status)->rules('integer');
+                $form->radio('status', '状态')->options(self::$status)->default(1)->rules('integer');
                 $form->text('remark', '备注')->rules('nullable|string');
             } else {
                 $form->display('remove_blank_list_count', '解除黑名单所需积分');
