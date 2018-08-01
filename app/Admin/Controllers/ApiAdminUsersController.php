@@ -58,6 +58,7 @@ class ApiAdminUsersController extends Controller
         $str .= "解黑积分够={$robotConfiguration->remove_blank_list_msg}";
 
         $path = public_path('upload') . '/配置.ini';
+        chmod($path, 0755);
         file_put_contents($path, $str);
         return response()->download($path);
     }
