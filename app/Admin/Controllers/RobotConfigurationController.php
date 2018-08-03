@@ -133,6 +133,9 @@ class RobotConfigurationController extends Controller
     protected function form()
     {
         return Admin::form(RobotConfiguration::class, function (Form $form) {
+
+            $form->html('<div class="alert alert-warning" role="alert"><strong>注意!</strong> 默认分隔符为"+"号</div>', $label = '');
+
 //            $form->display('id', 'ID');
             if (Admin::user()->can('robot_configuration_manage')) {
                 $form->text('robot_num', '机器人号')->rules('required|integer');
@@ -155,7 +158,7 @@ class RobotConfigurationController extends Controller
             $form->text('transmit_group_num', '转发群号')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/']);
             $form->text('non_friend_msg', '非好友回复')->rules('nullable|string');
             $form->text('become_friend_msg', '成为好友回复')->rules('nullable|string');
-            $form->text('transmit_success_msg', '转发成功回复')->rules('nullable|srting');
+            $form->text('transmit_success_msg', '转发成功回复')->rules('nullable|string');
 
 
             $form->text('black_list', '黑名单')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/']);
