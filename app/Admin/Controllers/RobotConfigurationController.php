@@ -87,6 +87,8 @@ class RobotConfigurationController extends Controller
         return Admin::grid(RobotConfiguration::class, function (Grid $grid) {
 //            禁用行选择checkbox
             $grid->disableRowSelector();
+//            禁用导出按钮
+            $grid->disableExport();
             if (!Admin::user()->can('robot_configuration_manage')) {
 //            禁用创建按钮
                 $grid->disableCreateButton();
