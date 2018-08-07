@@ -31,6 +31,11 @@ class Goods extends Base
         return $this->newQuery()->whereStatus(1)->findOrFail($goodsId);
     }
 
+    public function getSalePriceAttribute()
+    {
+        return number_format($this->attributes['sale_price'], 2, '.', '');
+    }
+
     public function getImageAttribute()
     {
         return $this->getImageFullUrl($this->attributes['image']);
