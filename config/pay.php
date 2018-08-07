@@ -7,7 +7,7 @@ return [
 
         // 支付宝异步通知地址
 //        'notify_url' => env('APP_URL').env('ALIPAY_NOTIFY'),
-        'notify_url' => 'http://requestbin.fullcontact.com/11xb3j11',
+        'notify_url' => 'http://requestbin.fullcontact.com/1at2vwa1',
 
         // 支付成功后同步通知地址
         'return_url' => env('APP_URL').env('ALIPAY_RETURN'),

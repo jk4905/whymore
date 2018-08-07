@@ -111,9 +111,14 @@ class OrdersController extends Controller
 //        $this->authorize('own', $order);
 
         $order->checkPay();
+//        $data = [
+//            'out_trade_no' => $order->order_id,
+//            'total_amount' => sprintf("%.2f", $order->real_amount),
+//            'subject' => env('APP_PAY_NAME'),
+//        ];
         $data = [
-            'out_trade_no' => $order->order_id,
-            'total_amount' => sprintf("%.2f", $order->real_amount),
+            'out_trade_no' => time(),
+            'total_amount' => 0.01,
             'subject' => env('APP_PAY_NAME'),
         ];
         return app('alipay')->web($data);
