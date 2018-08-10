@@ -58,7 +58,7 @@ class ApiAdminUsersController extends Controller
         $str .= "解黑积分够={$robotConfiguration->remove_blank_list_msg}";
 
         $path = public_path('upload') . '/配置.ini';
-        file_put_contents($path, iconv('UTF-8', 'GB2312', $str));
+        file_put_contents($path, iconv('UTF-8', 'GB2312//IGNORE', $str));
 
         $header = [
             'Content-Type' => 'application/txt;charset=ANSI',

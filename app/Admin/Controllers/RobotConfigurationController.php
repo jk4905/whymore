@@ -153,40 +153,40 @@ class RobotConfigurationController extends Controller
             }
 
 
-            $form->text('sensitive_words', '敏感词')->rules('nullable|string');
-            $form->text('suffix', '后缀')->rules('nullable|string');
+            $form->text('sensitive_words', '敏感词')->rules('nullable|string|max:10000');
+            $form->text('suffix', '后缀')->rules('nullable|string|max:10000');
 
 
-            $form->text('transmit_group_num', '转发群号')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/']);
-            $form->text('non_friend_msg', '非好友回复')->rules('nullable|string');
-            $form->text('become_friend_msg', '成为好友回复')->rules('nullable|string');
-            $form->text('transmit_success_msg', '转发成功回复')->rules('nullable|string');
+            $form->text('transmit_group_num', '转发群号')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/','max:10000']);
+            $form->text('non_friend_msg', '非好友回复')->rules('nullable|string|max:10000');
+            $form->text('become_friend_msg', '成为好友回复')->rules('nullable|string|max:10000');
+            $form->text('transmit_success_msg', '转发成功回复')->rules('nullable|string|max:10000');
 
 
-            $form->text('black_list', '黑名单')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/']);
-            $form->text('black_list_msg', '黑名单回复')->rules('nullable|string');
+            $form->text('black_list', '黑名单')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/','max:10000']);
+            $form->text('black_list_msg', '黑名单回复')->rules('nullable|string|max:150');
             $form->number('warning_blacklist_count', '拉黑警告次数')->rules('integer|min:0');
 
-            $form->text('key_words', '转发关键字')->rules('nullable|string');
-            $form->text('not_key_words_msg', '未有关键字回复')->rules('nullable|string');
+            $form->text('key_words', '转发关键字')->rules('nullable|string|max:10000');
+            $form->text('not_key_words_msg', '未有关键字回复')->rules('nullable|string|max:10000');
 
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('transmit_length', '转发内容长度')->default(10)->rules('integer|min:0');
+                $form->number('transmit_length', '转发内容长度')->default(10)->rules('integer|min:0|max:100000000');
                 $form->text('transmit_length_wrong_msg', '转发内容长度不达标回复')->default('消息太简短不够10字节，请重新编辑你的消息哟！')->rules('nullable|string');
             } else {
                 $form->display('transmit_length', '转发内容长度');
                 $form->display('transmit_length_wrong_msg', '转发内容长度不达标回复');
             }
 
-            $form->text('sensitive_words_msg', '包含敏感词回复')->rules('nullable|string');
-            $form->number('suffix_odds', '后缀出现几率')->rules('integer|min:0');
+            $form->text('sensitive_words_msg', '包含敏感词回复')->rules('nullable|string|max:150');
+            $form->number('suffix_odds', '后缀出现几率')->rules('integer|min:0|max:100');
 
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('achieve_level', '达标等级')->rules('integer|min:0');
-                $form->text('not_achieve_level_msg', '不达标等级回复')->rules('nullable|string');
-                $form->number('invalid_begin_at', '机器人无效开始时间')->rules('integer|min:0');
-                $form->number('invalid_end_at', '机器人无效结束时间')->default(4)->rules('integer|min:0');
-                $form->number('transmit_delay', '转发延迟时间（单位：ms）')->default(200)->rules('integer|min:0');
+                $form->number('achieve_level', '达标等级')->rules('integer|min:0|max:1000000');
+                $form->text('not_achieve_level_msg', '不达标等级回复')->rules('nullable|string|max:150');
+                $form->number('invalid_begin_at', '机器人无效开始时间')->rules('integer|min:0|max:24');
+                $form->number('invalid_end_at', '机器人无效结束时间')->default(4)->rules('integer|min:0|max:24');
+                $form->number('transmit_delay', '转发延迟时间（单位：ms）')->default(200)->rules('integer|min:0|max:10000000');
             } else {
                 $form->display('achieve_level', '达标等级');
                 $form->display('not_achieve_level_msg', '不达标等级回复');
@@ -195,30 +195,30 @@ class RobotConfigurationController extends Controller
                 $form->display('transmit_delay', '转发延迟时间（单位：ms）');
             }
 
-            $form->text('group_admin', '管理员QQ')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/']);
-            $form->number('send_count', '消息发布限制次数')->rules('integer|min:0');
-            $form->text('overstep_send_count_msg', '超出次数回复')->rules('nullable|string');
+            $form->text('group_admin', '管理员QQ')->rules(['nullable', 'regex:/^\d+(\+\d+)*$/','max:150']);
+            $form->number('send_count', '消息发布限制次数')->rules('integer|min:0|max:1000000');
+            $form->text('overstep_send_count_msg', '超出次数回复')->rules('nullable|string|max:150');
 
 
-            $form->number('send_score', '发布一次所需积分')->rules('integer|min:0');
+            $form->number('send_score', '发布一次所需积分')->rules('integer|min:0|max:10000000');
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('recharge_score', '充值一元获得积分')->default(10)->rules('integer|min:0');
+                $form->number('recharge_score', '充值一元获得积分')->default(10)->rules('integer|min:0|max:10000000');
             } else {
                 $form->display('recharge_score', '充值一元获得积分');
             }
-            $form->number('reply_min_score', '回复最小积分')->rules('integer|min:0');
-            $form->number('reply_max_score', '回复最大积分')->rules('integer|min:0');
-            $form->number('sign_in_min_score', '签到最大积分')->rules('integer|min:0');
-            $form->number('sign_in_max_score', '签到最大积分')->rules('integer|min:0');
+            $form->number('reply_min_score', '回复最小积分')->rules('integer|min:0|max:10000000');
+            $form->number('reply_max_score', '回复最大积分')->rules('integer|min:0|max:10000000');
+            $form->number('sign_in_min_score', '签到最大积分')->rules('integer|min:0|max:10000000');
+            $form->number('sign_in_max_score', '签到最大积分')->rules('integer|min:0|max:10000000');
 
             if (Admin::user()->can('robot_configuration_manage')) {
-                $form->number('remove_blank_list_count', '解除黑名单所需积分')->rules('integer|min:0');
-                $form->text('remove_blank_list_msg', '解除黑名单成功回复')->default('消耗三积分，已经自动为您解除黑名单，请你注意发布消息的质量哦！')->rules('nullable|string');
+                $form->number('remove_blank_list_count', '解除黑名单所需积分')->rules('integer|min:0|max:10000000');
+                $form->text('remove_blank_list_msg', '解除黑名单成功回复')->default('消耗三积分，已经自动为您解除黑名单，请你注意发布消息的质量哦！')->rules('nullable|string|max:150');
 
 //            $form->textarea('menu', '菜单')->rules('');
 
                 $form->radio('status', '状态')->options(self::$status)->default(1)->rules('integer');
-                $form->text('remark', '备注')->rules('nullable|string');
+                $form->text('remark', '备注')->rules('nullable|string|max:150');
             } else {
                 $form->display('remove_blank_list_count', '解除黑名单所需积分');
                 $form->display('remove_blank_list_msg', '解除黑名单成功回复');
