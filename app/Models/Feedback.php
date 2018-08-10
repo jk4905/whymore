@@ -6,20 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class OrderItem extends Base
+class Feedback extends Model
 {
     protected $guarded = [];
 
-    public function order()
-    {
-        return $this->belongsTo(Order::class);
-    }
-
-    // 只取第一个图片
     public function getImageAttribute()
     {
-        return collect($this->getImageFullUrl($this->attributes['image']))->first();
+        return $this->getImageFullUrl($this->attributes['image']);
     }
+
+//    public function setImageAttribute($image)
+//    {
+//        if (is_array($image)) {
+//            $image = collect($image);
+//            $cdn = 'http://' . env('QINIU_DOMAIN') . '/';
+//            $image = $image->map(function ($value) use ($cdn) {
+//                return trim($value, $cdn);
+//            });
+//
+//            $this->attributes['image'] = implode(',', $image->toArray());
+//        }
+//    }
 
     public function getImageFullUrl($imagesArr)
     {

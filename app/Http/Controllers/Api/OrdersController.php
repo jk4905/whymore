@@ -28,13 +28,35 @@ class OrdersController extends Controller
     }
 
     /**
-     * 订单列表
+     *  订单列表
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->success(['list' => Order::query()->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get()]);
+        $validator = Validator::make($request->all(), [
+            'status' => 'int',
+        ]);
+        if ($validator->fails()) {
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
+        }
+        $query = Order::with('items');
+        if ($request->status > 0) {
+            $query->where('status', $request->status);
+        }
+        $list = $query->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        $list->each(function (&$item) {
+            $item->count = $item->items->count();
+            $item->images = $item->items->pluck('image');
+            if ($item->count > 1) {
+                $item->goods_name = '';
+            } else {
+                $item->goods_name = $item->items->pluck('goods_name')->first();
+            }
+        });
+        return $this->success(compact('list'));
     }
 
     /**
