@@ -173,20 +173,26 @@ class CartsController extends Controller
         if ($validator->fails()) {
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
-//        // 获取购物车
-        $this->cartInstance->restore(Auth::user()->id);
-        $list = [];
-        $goodsAmount = 0;
-        foreach ($request->row_id as $rowId) {
-            $cartsGoods = $this->cartInstance->get($rowId);
-            $goodsInfo = Goods::findOrFail($cartsGoods->id);
-            $goodsInfo['qty'] = $cartsGoods->qty;
-            $goodsInfo['image'] = $this->disk->getUrl($goodsInfo['image']);
-            $list[] = $goodsInfo;
-            $goodsAmount = bcadd($goodsAmount, bcmul($goodsInfo['sale_price'], $goodsInfo['qty']));
+//        获取购物车
+        try {
+            $this->cartInstance->restore(Auth::user()->id);
+            $list = [];
+            $goodsAmount = 0;
+            foreach ($request->row_id as $rowId) {
+                $cartsGoods = $this->cartInstance->get($rowId);
+                $goodsInfo = Goods::findOrFail($cartsGoods->id);
+                $goodsInfo['qty'] = $cartsGoods->qty;
+//                $goodsInfo['image'] =  $this->goodsModel->getImageFullUrl($goodsInfo['image']);
+                $list[] = $goodsInfo;
+                $goodsAmount = bcadd($goodsAmount, bcmul($goodsInfo['sale_price'], $goodsInfo['qty']));
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+//            保存购物车
+            $this->cartInstance->store(Auth::user()->id);
         }
-        // 保存购物车
-        $this->cartInstance->store(Auth::user()->id);
+
 //        优惠券可用数量
         $couponCount = Coupon::list(Auth::user(), $goodsAmount)->count();
 
