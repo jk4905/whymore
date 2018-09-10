@@ -30,7 +30,7 @@ Route::get('categories/{category}', 'Api\CategoriesController@getGoodsList');
 //    banners
 Route::get('banners', 'Api\BannersController@index');
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(function () {
 //    Carts
     Route::get('carts', 'Api\CartsController@index');
     Route::post('carts', 'Api\CartsController@store');
