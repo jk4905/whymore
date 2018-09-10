@@ -24,15 +24,15 @@ class InvalidRequestException extends Exception
             $this->message = config('errorcode.code')[(int)$this->code];
         }
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => false,
-                'code' => $this->code,
-                'message' => $this->message,
-                'data' => $this->message,
-            ]);
-        }
+//        if ($request->expectsJson()) {
+        return response()->json([
+            'status' => false,
+            'code' => $this->code,
+            'message' => $this->message,
+            'data' => $this->message,
+        ]);
+//        }
 
-        return view('pages.error', ['msg' => $this->message]);
+//        return view('pages.error', ['msg' => $this->message]);
     }
 }
