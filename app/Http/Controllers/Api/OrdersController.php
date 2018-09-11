@@ -159,7 +159,11 @@ class OrdersController extends Controller
     // 服务器端回调
     public function alipayNotify()
     {
-        $data = app('alipay')->verify();
+        try {
+            $data = app('alipay')->verify();
+        } catch (\Exception $e) {
+            $e->getMessage();
+        }
         \Log::debug('Alipay notify', $data->all());
     }
 }
