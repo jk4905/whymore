@@ -143,8 +143,8 @@ class OrdersController extends Controller
             'total_amount' => 0.01,
             'subject' => env('APP_PAY_NAME'),
         ];
-//        return app('alipay')->web($data);
-        return app('alipay')->wap($data);
+        return app('alipay')->web($data);
+//        return app('alipay')->wap($data);
     }
 
 
