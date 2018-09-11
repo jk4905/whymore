@@ -21,12 +21,11 @@ return [
         // optional，默认 warning；日志路径为：sys_get_temp_dir().'/logs/yansongda.pay.log'
         'log' => [
             'file' => storage_path('logs/alipay.log'),
-            //     'level' => 'debug'
+            'level' => 'debug'
         ],
 
         // optional，设置此参数，将进入沙箱模式
-//        'mode' => 'dev',
-        'mode' => '',
+        'mode' => env('ALIPAY_MODE', 'dev'),
     ],
 
     'wechat' => [

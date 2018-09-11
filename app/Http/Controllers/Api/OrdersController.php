@@ -165,5 +165,6 @@ class OrdersController extends Controller
             $e->getMessage();
         }
         \Log::debug('Alipay notify', $data->all());
+        return app('alipay')->success();
     }
 }
