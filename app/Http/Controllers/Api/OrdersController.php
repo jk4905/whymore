@@ -154,7 +154,6 @@ class OrdersController extends Controller
             'subject' => env('APP_PAY_NAME'),
         ];
         $config = config('pay.alipay');
-        dd($config);
         $alipay = Pay::alipay($config)->web($data);
 
         return $alipay->send();// laravel 框架中请直接 `return $alipay`
