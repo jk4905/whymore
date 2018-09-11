@@ -66,4 +66,24 @@ class Coupon extends Base
         }])->where('condition', '<', $amount)->find($couponId);
         return $couponInfo;
     }
+
+    /**
+     * 格式化折扣金额
+     *
+     * @return string
+     */
+    public function getDiscountAttribute()
+    {
+        return number_format($this->attributes['discount'], 1, '.', '');
+    }
+
+    /**
+     * 格式化条件金额
+     *
+     * @return string
+     */
+    public function getConditionAttribute()
+    {
+        return number_format($this->attributes['condition'], 1, '.', '');
+    }
 }

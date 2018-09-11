@@ -87,4 +87,17 @@ class Order extends Base
         return true;
     }
 
+    /**
+     * 验证支付是否有效
+     *
+     * @param $amount
+     * @throws InvalidRequestException
+     */
+    public function checkPaymentValid($amount)
+    {
+        if ($this->real_amount != $amount) {
+            throw new InvalidRequestException(40010);
+        }
+        return true;
+    }
 }

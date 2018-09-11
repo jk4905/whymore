@@ -11,6 +11,7 @@ use App\Services\OrderService;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -140,23 +141,13 @@ class OrdersController extends Controller
 //            'total_amount' => sprintf("%.2f", $order->real_amount),
 //            'subject' => env('APP_PAY_NAME'),
 //        ];
-//        $data = [
-//            'out_trade_no' => date('Y-m-d') . time(),
-//            'total_amount' => 0.01,
-//            'subject' => env('APP_PAY_NAME'),
-//        ];
-//        return app('alipay')->web($data);
-//        return app('alipay')->wap($data);
-
         $data = [
             'out_trade_no' => date('Y-m-d') . time(),
             'total_amount' => 0.01,
             'subject' => env('APP_PAY_NAME'),
         ];
-        $config = config('pay.alipay');
-        $alipay = Pay::alipay($config)->web($data);
-
-        return $alipay->send();// laravel 框架中请直接 `return $alipay`
+        return app('alipay')->web($data);
+//        return app('alipay')->wap($data);
     }
 
 
@@ -164,8 +155,16 @@ class OrdersController extends Controller
     public function alipayReturn()
     {
         // 校验提交的参数是否合法
-        $data = app('alipay')->verify();
-        dd($data);
+        $alipayNotifyInfo = app('alipay')->verify();
+//        todo
+        $alipayNotifyInfo->trade_no = 9;
+        $alipayNotifyInfo->total_amount = 69;
+
+        $order = Order::findOrFail($alipayNotifyInfo->trade_no);
+        $order->checkPaymentValid($alipayNotifyInfo->total_amount);
+        $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
+        dd($alipayNotifyInfo);
+        exit;
     }
 
     // 服务器端回调
@@ -198,5 +197,27 @@ class OrdersController extends Controller
         }
         \Log::debug('Alipay notify', $data->all());
         return app('alipay')->success();
+    }
+
+    /**
+     * 验证 app_id 是否正确
+     *
+     * @param $notifyAppId
+     * @param $type
+     * @return bool
+     * @throws InvalidRequestException
+     */
+    public function checkPayAppIdValid($notifyAppId, $type)
+    {
+        $config = config('pay.' . $type);
+        if (empty($config)) {
+            throw new InvalidRequestException(40011);
+        }
+
+        if ($config['app_id'] != $notifyAppId) {
+            throw new InvalidRequestException(40012);
+        }
+
+        return true;
     }
 }
