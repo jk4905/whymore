@@ -55,11 +55,13 @@ Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(functio
 
 //    Coupons
     Route::get('coupons', 'Api\CouponsController@index');
-    Route::get('coupons/usable', 'Api\CouponsController@getUsableCoupon');
+    Route::get('coupons/usable', 'Api\CartsController@getUsableCoupon');
+
     Route::post('coupons/{coupon}', 'Api\CouponsController@add');
 
 //    Orders
     Route::get('orders', 'Api\OrdersController@index');
+    Route::get('order/freight', 'Api\CartsController@getFreight');
     Route::get('orders/{order}', 'Api\OrdersController@show');
     Route::post('orders', 'Api\OrdersController@store');
 });

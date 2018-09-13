@@ -58,7 +58,7 @@ class FeedbacksController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:2048',
+            'name' => 'required|string|max:500',
             'image' => 'filled|string|max:2048'
         ]);
 

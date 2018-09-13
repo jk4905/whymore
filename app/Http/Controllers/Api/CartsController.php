@@ -166,23 +166,77 @@ class CartsController extends Controller
      */
     public function confirm(Request $request)
     {
+        $this->validateCart($request);
+        $goodsListAndAmount = $this->getCartsGoodsListAndAmount($request->row_id);
+        $goodsAmount = $goodsListAndAmount['goodsAmount'];
+        $list = $goodsListAndAmount['list'];
+//        优惠券可用数量
+        $couponCount = Coupon::list(Auth::user(), $goodsAmount)->count();
+
+        $shippingType = Order::$shippingType;
+        $freight = Order::$freight;
+        $payType = Order::$paymentType;
+        return $this->success(compact('list', 'couponCount', 'shippingType', 'freight', 'payType'));
+    }
+
+
+    public function getUsableCoupon(Request $request)
+    {
+        $this->validateCart($request);
+        $goodsListAndAmount = $this->getCartsGoodsListAndAmount($request->row_id);
+        $goodsAmount = $goodsListAndAmount['goodsAmount'];
+
+        $user = Auth::user();
+//        $list = Coupon::usableList($user, $order->real_amount);
+        $list = Coupon::list($user, $goodsAmount);
+        return $this->success(compact('list'));
+    }
+
+    public function getFreight(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'row_id.*' => 'required',
+            'row_id.*' => 'required|string',
+            'shipping_type' => 'required|int'
         ]);
 //
         if ($validator->fails()) {
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
-//        获取购物车
+
+        $freight = 10;
+
+        return $this->success(compact('freight'));
+    }
+
+    public function validateCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'row_id.*' => 'required|string',
+        ]);
+//
+        if ($validator->fails()) {
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
+        }
+        return $request;
+    }
+
+    /**
+     * 获取购物车商品信息和总金额
+     * @param $rowIds
+     * @return array
+     * @throws \Exception
+     */
+    public function getCartsGoodsListAndAmount($rowIds)
+    {
+        //        获取购物车
         try {
             $this->cartInstance->restore(Auth::user()->id);
             $list = [];
             $goodsAmount = 0;
-            foreach ($request->row_id as $rowId) {
+            foreach ($rowIds as $rowId) {
                 $cartsGoods = $this->cartInstance->get($rowId);
                 $goodsInfo = Goods::findOrFail($cartsGoods->id);
                 $goodsInfo['qty'] = $cartsGoods->qty;
-//                $goodsInfo['image'] =  $this->goodsModel->getImageFullUrl($goodsInfo['image']);
                 $list[] = $goodsInfo;
                 $goodsAmount = bcadd($goodsAmount, bcmul($goodsInfo['sale_price'], $goodsInfo['qty']));
             }
@@ -192,14 +246,8 @@ class CartsController extends Controller
 //            保存购物车
             $this->cartInstance->store(Auth::user()->id);
         }
-
-//        优惠券可用数量
-        $couponCount = Coupon::list(Auth::user(), $goodsAmount)->count();
-
-        $shippingType = Order::$shippingType;
-        $freight = Order::$freight;
-        $payType = Order::$paymentType;
-        return $this->success(compact('list', 'couponCount', 'shippingType', 'freight', 'payType'));
+        return compact('list', 'goodsAmount');
     }
+
 
 }

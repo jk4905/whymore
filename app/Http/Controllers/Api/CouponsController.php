@@ -41,18 +41,5 @@ class CouponsController extends Controller
         return Auth::user()->coupons()->updateExistingPivot($coupon->id, ['status' => $status]);
     }
 
-    public function getUsableCoupon(Request $request)
-    {
-        $user = Auth::user();
-        $validator = Validator::make($request->all(), [
-            'amount' => "required|numeric|min:0",
-        ]);
-        if ($validator->fails()) {
-            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
-        }
 
-//        $list = Coupon::usableList($user, $order->real_amount);
-        $list = Coupon::list($user, $request->amount);
-        return $this->success(compact('list'));
-    }
 }
