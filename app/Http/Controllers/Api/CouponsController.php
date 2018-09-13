@@ -45,14 +45,14 @@ class CouponsController extends Controller
     {
         $user = Auth::user();
         $validator = Validator::make($request->all(), [
-            'order_id' => "required|numeric|min:0|exists:orders,id,user_id,{$user->id}",
+            'amount' => "required|numeric|min:0",
         ]);
         if ($validator->fails()) {
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
-        $order = Order::query()->find($request->order_id);
+
 //        $list = Coupon::usableList($user, $order->real_amount);
-        $list = Coupon::list($user, $order->real_amount);
+        $list = Coupon::list($user, $request->amount);
         return $this->success(compact('list'));
     }
 }

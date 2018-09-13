@@ -28,7 +28,7 @@ class Coupon extends Base
             $item->status = $item->pivot->status;
             $item->begin_at = date('Y-m-d H:i:s', $item->pivot->begin_at);
             $item->end_at = date('Y-m-d H:i:s', $item->pivot->end_at);
-            if (bccomp($amount, $item->condition) > 0) {
+            if (bccomp($amount, $item->condition) >= 0) {
                 $item->usable = true;
                 $item->reason = '';
             } else {
