@@ -23,17 +23,21 @@ class Coupon extends Base
         $list = $user->with(['coupons' => function ($query) {
             return $query->orderBy('status', 'asc');
         }])->where('id', $user->id)->get()->pluck('coupons')[0];
+
         $list = $list->each(function ($item, $key) use ($amount) {
             $item->status = $item->pivot->status;
             $item->begin_at = date('Y-m-d H:i:s', $item->pivot->begin_at);
             $item->end_at = date('Y-m-d H:i:s', $item->pivot->end_at);
-            if (empty($amount)) {
+            if (bccomp($amount, $item->condition) > 0) {
                 $item->usable = true;
+                $item->reason = '';
             } else {
-                $item->usable = (bccomp($amount, $item->condition) > 0) ? false : true;
+                $item->usable = false;
+                $item->reason = "订单金额小于{$item->condition}";
             }
             unset($item->pivot);
         });
+
         return $list;
     }
 
@@ -64,6 +68,9 @@ class Coupon extends Base
         $couponInfo = self::with(['users' => function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('begin_at', '>=', Carbon::now())->where('end_at', '<=', Carbon::now());
         }])->where('condition', '<', $amount)->find($couponId);
+        $couponInfo->each(function (&$item) {
+            $item['reason'] = '';
+        });
         return $couponInfo;
     }
 
@@ -86,4 +93,6 @@ class Coupon extends Base
     {
         return number_format($this->attributes['condition'], 1, '.', '');
     }
+
+
 }

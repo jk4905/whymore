@@ -100,4 +100,14 @@ class Order extends Base
         }
         return true;
     }
+
+    public function getPayUrl()
+    {
+        if ($this->status == 1) {
+            $this->redirect_url = route('alipay', $this->id);
+        } else {
+            $this->redirect_url = '';
+        }
+        return $this;
+    }
 }

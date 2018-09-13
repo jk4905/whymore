@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Models\Coupon;
+use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CouponsController extends Controller
 {
@@ -36,5 +39,20 @@ class CouponsController extends Controller
     public function change(Coupon $coupon, $status)
     {
         return Auth::user()->coupons()->updateExistingPivot($coupon->id, ['status' => $status]);
+    }
+
+    public function getUsableCoupon(Request $request)
+    {
+        $user = Auth::user();
+        $validator = Validator::make($request->all(), [
+            'order_id' => "required|numeric|min:0|exists:orders,id,user_id,{$user->id}",
+        ]);
+        if ($validator->fails()) {
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
+        }
+        $order = Order::query()->find($request->order_id);
+//        $list = Coupon::usableList($user, $order->real_amount);
+        $list = Coupon::list($user, $order->real_amount);
+        return $this->success(compact('list'));
     }
 }

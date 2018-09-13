@@ -55,6 +55,7 @@ Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(functio
 
 //    Coupons
     Route::get('coupons', 'Api\CouponsController@index');
+    Route::get('coupons/usable', 'Api\CouponsController@getUsableCoupon');
     Route::post('coupons/{coupon}', 'Api\CouponsController@add');
 
 //    Orders

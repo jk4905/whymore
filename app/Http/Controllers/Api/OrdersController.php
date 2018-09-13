@@ -58,6 +58,8 @@ class OrdersController extends Controller
             } else {
                 $item->goods_name = $item->items->pluck('goods_name')->first();
             }
+
+           $item->getPayUrl();
         });
         return $this->success(compact('list'));
     }
@@ -70,7 +72,9 @@ class OrdersController extends Controller
      */
     public function show(Order $order)
     {
-        return $this->success(Order::with('items')->where('user_id', Auth::user()->id)->findOrFail($order->id));
+        $order = Order::with('items')->where('user_id', Auth::user()->id)->findOrFail($order->id);
+        $order->getPayUrl();
+        return $this->success($order);
     }
 
     /**
