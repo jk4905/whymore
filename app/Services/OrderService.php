@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OrderService
 {
@@ -46,16 +47,16 @@ class OrderService
             if (!empty($discount)) {
                 $itemDiscount = bcdiv($discount, $goodsCount);
             }
-
+            $disk = Storage::disk('qiniu');
 //            item
-            $cartContent->each(function ($item, $key) use ($order, $itemDiscount) {
+            $cartContent->each(function ($item, $key) use ($order, $itemDiscount, $disk) {
                 // 创建一个 OrderItem 并直接与当前订单关联
                 $item = $order->items()->make([
                     'goods_id' => $item->id,
                     'goods_name' => $item->name,
                     'qty' => $item->qty,
                     'description' => $item->model->description,
-                    'image' => getImgUrl($item->model->image),
+                    'image' => implode(',',$item->model->image),
                     'price' => $item->model->sale_price,
                     'discount' => $itemDiscount,
                     'item_amount' => bcsub(bcmul($item->model->sale_price, $item->qty), $itemDiscount),
