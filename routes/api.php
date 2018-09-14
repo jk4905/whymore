@@ -66,9 +66,9 @@ Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(functio
     Route::post('orders', 'Api\OrdersController@store');
 });
 
-Route::get('orders/{order}/alipay', 'Api\OrdersController@alipay')->name('alipay');
-Route::post('orders/alipay/notify', 'Api\OrdersController@alipayNotify')->name('alipay.notify');
+Route::get('orders/alipay/notify', 'Api\OrdersController@alipayNotify')->name('alipay.notify');
 Route::get('orders/alipay/return', 'Api\OrdersController@alipayReturn')->name('alipay.return');
+Route::get('orders/{order}/alipay', 'Api\OrdersController@alipay')->name('alipay');
 
 //    Feedback
 Route::get('feedbacks', 'Api\FeedbacksController@index');

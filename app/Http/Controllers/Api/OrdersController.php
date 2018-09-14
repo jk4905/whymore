@@ -59,7 +59,7 @@ class OrdersController extends Controller
                 $item->goods_name = $item->items->pluck('goods_name')->first();
             }
 
-           $item->getPayUrl();
+            $item->getPayUrl();
         });
         return $this->success(compact('list'));
     }
@@ -162,11 +162,10 @@ class OrdersController extends Controller
         $alipayNotifyInfo = app('alipay')->verify();
 //        todo
         $alipayNotifyInfo->trade_no = 9;
-        $alipayNotifyInfo->total_amount = 69;
+        $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
 
         $order = Order::findOrFail($alipayNotifyInfo->trade_no);
         $order->checkPaymentValid($alipayNotifyInfo->total_amount);
-        $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
         dd($alipayNotifyInfo);
         exit;
     }
@@ -174,11 +173,10 @@ class OrdersController extends Controller
     // 服务器端回调
     public function alipayNotify()
     {
-        $config = config('pay.alipay');
-        $alipay = Pay::alipay($config);
+        $alipay = app('alipay');
 
         try {
-            $data = $alipay->verify(); // 是的，验签就这么简单！
+            $alipayNotifyInfo = $alipay->verify(); // 是的，验签就这么简单！
 
             // 请自行对 trade_status 进行判断及其它逻辑进行判断，在支付宝的业务通知中，只有交易通知状态为 TRADE_SUCCESS 或 TRADE_FINISHED 时，支付宝才会认定为买家付款成功。
             // 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号；
@@ -186,21 +184,21 @@ class OrdersController extends Controller
             // 3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）；
             // 4、验证app_id是否为该商户本身。
             // 5、其它业务逻辑情况
-
-            Log::debug('Alipay notify', $data->all());
+            $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
+//            todo
+            $alipayNotifyInfo->trade_no = 20180706214656806114;
+            $order = Order::query()->where('order_id',$alipayNotifyInfo->trade_no)->first();
+            $order->checkPaymentValid($alipayNotifyInfo->total_amount);
+            Log::debug('Payment notify（Alipay）', $alipayNotifyInfo->all());
+            $order->status = Order::STATUS_PAID;
+            $order->paid_at = date('Y-m-d H:i:s', time());
+            $order->payment_no = $alipayNotifyInfo->out_trade_no;
+            $order->save();
         } catch (\Exception $e) {
-            $e->getMessage();
+            echo $e->getMessage();
         }
 
         return $alipay->success();// laravel 框架中请直接 `return $alipay->success()`
-
-        try {
-            $data = app('alipay')->verify();
-        } catch (\Exception $e) {
-            $e->getMessage();
-        }
-        \Log::debug('Alipay notify', $data->all());
-        return app('alipay')->success();
     }
 
     /**

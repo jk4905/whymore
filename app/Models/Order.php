@@ -22,14 +22,21 @@ class Order extends Base
         2 => '微信'
     ];
 
+    const STATUS_NOT_PAID    = 1;
+    const STATUS_PAID        = 2;
+    const STATUS_NOT_SHIPPED = 3;
+    const STATUS_SHIPPED     = 4;
+    const STATUS_COMPLETE    = 5;
+    const STATUS_CLOSE       = 6;
+
 //    状态，1-未付款，2-已付款，3-未发货，4-已发货，5-交易完成，6-交易关闭
     public static $status = [
-        1 => '未付款',
-        2 => '已付款',
-        3 => '未发货',
-        4 => '已发货',
-        5 => '交易完成',
-        6 => '交易关闭',
+        self::STATUS_NOT_PAID => '未付款',
+        self::STATUS_PAID => '已付款',
+        self::STATUS_NOT_SHIPPED => '未发货',
+        self::STATUS_SHIPPED => '已发货',
+        self::STATUS_COMPLETE => '交易完成',
+        self::STATUS_CLOSE => '交易关闭',
     ];
 
     public static $freight = 10;
@@ -81,8 +88,8 @@ class Order extends Base
      */
     public function checkPay()
     {
-        if ($this->status != 1) {
-            throw new InvalidRequestException('订单状态错误');
+        if ($this->status != self::STATUS_NOT_PAID) {
+            throw new InvalidRequestException(40013);
         }
         return true;
     }
@@ -98,12 +105,15 @@ class Order extends Base
         if ($this->real_amount != $amount) {
             throw new InvalidRequestException(40010);
         }
+        if ($this->status != self::STATUS_NOT_PAID) {
+            throw new InvalidRequestException(40013);
+        }
         return true;
     }
 
     public function getPayUrl()
     {
-        if ($this->status == 1) {
+        if ($this->status == self::STATUS_NOT_PAID) {
             $this->redirect_url = route('alipay', $this->id);
         } else {
             $this->redirect_url = '';
