@@ -41,7 +41,7 @@ Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(functio
 //    Users
     Route::get('user', 'Api\UsersController@index');
     Route::post('user/upload', 'Api\UsersController@uploadAvatar');
-    Route::post('user/logout', 'Api\UsersController@logout');
+    Route::get('user/logout', 'Api\UsersController@logout');
     Route::put('user', 'Api\UsersController@update');
 
 //    Addresses
