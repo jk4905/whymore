@@ -32,6 +32,12 @@ class UsersController extends Controller
         }
     }
 
+    public function logout()
+    {
+        Auth::user()->token()->delete();
+        return $this->success([]);
+    }
+
     /**
      * Register api
      *
