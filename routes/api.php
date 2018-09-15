@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'Api\UsersController@login');
 Route::post('register', 'Api\UsersController@store');
 Route::post('sendSms', 'Api\UsersController@sendSms');
+Route::get('user/logout', 'Api\UsersController@logout');
 //Route::post('add', 'Api\AddressesController@add');    // 添加省市区
 
 //    Goods
@@ -41,7 +42,6 @@ Route::middleware(['auth:api', \Barryvdh\Cors\HandleCors::class])->group(functio
 //    Users
     Route::get('user', 'Api\UsersController@index');
     Route::post('user/upload', 'Api\UsersController@uploadAvatar');
-    Route::get('user/logout', 'Api\UsersController@logout');
     Route::put('user', 'Api\UsersController@update');
 
 //    Addresses
