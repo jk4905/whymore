@@ -40,8 +40,9 @@ class CartsController extends Controller
     public function index()
     {
         $this->cartInstance->restore(Auth::user()->id);
-        $this->cartInstance->store(Auth::user()->id);
         $content = $this->cartInstance->content();
+        usleep(10000);
+        $this->cartInstance->store(Auth::user()->id);
         return $this->success(['list' => $this->cartService->getGoodsList($content)]);
     }
 

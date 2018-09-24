@@ -27,6 +27,9 @@ class CartService
         if (empty($user->id)) {
             $user = Auth::guard('api')->user();
         }
+        if (empty($user->id)) {
+            return [];
+        }
         $this->cartInstance->restore($user->id);
         $this->cartInstance->store($user->id);
         return $this->cartInstance->content();
@@ -39,10 +42,17 @@ class CartService
      */
     public function getCartDict()
     {
-        if (empty(Auth::guard('api')->user())) {
+        $user = Auth::user();
+        if (empty($user->id)) {
+            $user = Auth::guard('api')->user();
+        }
+        if (empty($user->id)) {
             return [];
         }
         $cart = $this->getContent();
+        if (empty($cart)) {
+            return [];
+        }
         $cartDict = $cart->mapWithKeys(function ($item) {
             return [$item->id => [
                 'goods_id' => $item->id,

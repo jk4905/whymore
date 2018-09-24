@@ -47,7 +47,7 @@ class GoodsController extends Controller
 
         $perPage = empty($request->per_page) ? self::PAGINATE : $request->per_page;
         $list = Goods::query()->whereStatus(1)->orderByDesc('sort')->paginate(self::PAGINATE);
-        if (Auth::guard('api')->user()->id) {
+        if (!empty(Auth::guard('api')->user()->id)) {
             $newList = $this->getNewPage($list, $perPage);
         } else {
             $newList = $list;
@@ -101,6 +101,11 @@ class GoodsController extends Controller
     public function getNewPage($list, $perPage)
     {
         $newList = $this->cartService->getQtyAndRowId($list);
+        if ($newList instanceof LengthAwarePaginator) {
+            $newList = ($newList->toArray())['data'];
+        } else {
+            $newList = $newList->toArray();
+        }
         $page = $this->getPaging($newList, $list->total(), $list->currentPage(), $perPage);
         return $page;
     }
