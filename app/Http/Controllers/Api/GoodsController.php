@@ -47,7 +47,11 @@ class GoodsController extends Controller
 
         $perPage = empty($request->per_page) ? self::PAGINATE : $request->per_page;
         $list = Goods::query()->whereStatus(1)->orderByDesc('sort')->paginate(self::PAGINATE);
-        $newList = $this->getNewPage($list, $perPage);
+        if (Auth::guard('api')->user()->id) {
+            $newList = $this->getNewPage($list, $perPage);
+        } else {
+            $newList = $list;
+        }
         return $this->success($newList);
     }
 
