@@ -75,3 +75,8 @@ Route::get('orders/{order}/alipay', 'Api\OrdersController@alipay')->name('alipay
 Route::get('feedbacks', 'Api\FeedbacksController@index');
 Route::post('feedbacks', 'Api\FeedbacksController@store');
 Route::get('feedbacks/{feedback}', 'Api\FeedbacksController@show');
+
+
+//    newRobot
+Route::get('robot/config', 'Api\RobotsController@getConfig');
+Route::post('robot/message', 'Api\RobotsController@store');
