@@ -42,6 +42,10 @@ class OrderService
             ]);
             $order->user()->associate($user);
 
+
+//            todo
+            $order->real_amount = 0.01;
+
             $goodsCount = $cartContent->count();
             $itemDiscount = 0;
             if (!empty($discount)) {
@@ -56,7 +60,7 @@ class OrderService
                     'goods_name' => $item->name,
                     'qty' => $item->qty,
                     'description' => $item->model->description,
-                    'image' => implode(',',$item->model->image),
+                    'image' => implode(',', $item->model->image),
                     'price' => $item->model->sale_price,
                     'discount' => $itemDiscount,
                     'item_amount' => bcsub(bcmul($item->model->sale_price, $item->qty), $itemDiscount),

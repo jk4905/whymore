@@ -172,7 +172,7 @@ class CartsController extends Controller
         $goodsAmount = $goodsListAndAmount['goodsAmount'];
         $list = $goodsListAndAmount['list'];
 //        优惠券可用数量
-        $couponCount = Coupon::list(Auth::user(), $goodsAmount)->count();
+        $couponCount = Coupon::list($goodsAmount)->count();
 
         $shippingType = Order::$shippingType;
         $freight = Order::$freight;
@@ -186,10 +186,8 @@ class CartsController extends Controller
         $this->validateCart($request);
         $goodsListAndAmount = $this->getCartsGoodsListAndAmount($request->row_id);
         $goodsAmount = $goodsListAndAmount['goodsAmount'];
-
-        $user = Auth::user();
 //        $list = Coupon::usableList($user, $order->real_amount);
-        $list = Coupon::list($user, $goodsAmount);
+        $list = Coupon::list($goodsAmount);
         return $this->success(compact('list'));
     }
 

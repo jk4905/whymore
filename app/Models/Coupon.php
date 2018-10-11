@@ -18,8 +18,9 @@ class Coupon extends Base
      *
      * @return mixed
      */
-    public static function list(User $user, $amount = 0)
+    public static function list($amount = 0)
     {
+        $user = Auth::user();
         $list = $user->with(['coupons' => function ($query) {
             return $query->orderBy('status', 'asc');
         }])->where('id', $user->id)->get()->pluck('coupons')[0];

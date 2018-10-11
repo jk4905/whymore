@@ -17,7 +17,7 @@ class CouponsController extends Controller
 
     public function index()
     {
-        $list = Coupon::list(Auth::user());
+        $list = Coupon::list();
         return $this->success(compact('list'));
     }
 

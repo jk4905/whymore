@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -135,23 +136,18 @@ class OrdersController extends Controller
      */
     public function alipay(Order $order)
     {
-//        dd(route('alipay.return'));
         // 判断订单是否属于当前用户
-//        $this->authorize('own', $order);
+        $this->authorize('own', $order);
 
-//        $order->checkPay();
-//        $data = [
-//            'out_trade_no' => $order->order_id,
-//            'total_amount' => sprintf("%.2f", $order->real_amount),
-//            'subject' => env('APP_PAY_NAME'),
-//        ];
+        $order->checkPay();
         $data = [
-            'out_trade_no' => date('Y-m-d') . time(),
-            'total_amount' => 0.01,
+            'out_trade_no' => $order->order_id,
+            'total_amount' => sprintf("%.2f", $order->real_amount),
             'subject' => env('APP_PAY_NAME'),
         ];
-        return app('alipay')->web($data);
-//        return app('alipay')->wap($data);
+
+//        return app('alipay')->web($data);
+        return app('alipay')->wap($data);
     }
 
 
@@ -160,14 +156,16 @@ class OrdersController extends Controller
     {
         // 校验提交的参数是否合法
         $alipayNotifyInfo = app('alipay')->verify();
-//        todo
-        $alipayNotifyInfo->trade_no = 9;
-        $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
 
-        $order = Order::findOrFail($alipayNotifyInfo->trade_no);
-        $order->checkPaymentValid($alipayNotifyInfo->total_amount);
-        dd($alipayNotifyInfo);
-        exit;
+        try {
+            $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
+            $order = Order::findOrFail($alipayNotifyInfo->trade_no);
+            $order->checkPaymentValid($alipayNotifyInfo->total_amount);
+            $url = env('APP_URL') . '/#' . env('APP_PAY_SUCCESS');
+        } catch (\Exception $e) {
+            $url = env('APP_URL') . '/#' . env('APP_PAY_FAIL') . '&failReason=' . $e->getMessage() . '&redirect_url=' . base64_encode(route('alipay', ['id' => $order->id]));
+        }
+        return Response::redirectTo($url);
     }
 
     // 服务器端回调
@@ -185,9 +183,7 @@ class OrdersController extends Controller
             // 4、验证app_id是否为该商户本身。
             // 5、其它业务逻辑情况
             $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
-//            todo
-            $alipayNotifyInfo->trade_no = 20180706214656806114;
-            $order = Order::query()->where('order_id',$alipayNotifyInfo->trade_no)->first();
+            $order = Order::query()->where('order_id', $alipayNotifyInfo->trade_no)->first();
             $order->checkPaymentValid($alipayNotifyInfo->total_amount);
             Log::debug('Payment notify（Alipay）', $alipayNotifyInfo->all());
             $order->status = Order::STATUS_PAID;
