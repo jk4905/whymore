@@ -6,6 +6,7 @@ use App\Exceptions\InvalidRequestException;
 use App\Models\RobotConfiguration;
 use App\Models\RobotMessage;
 use App\Models\RobotMessageUser;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -65,5 +66,30 @@ class RobotsController extends Controller
         return $this->success([]);
     }
 
+    /**
+     * 上传图片
+     *
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     * @throws InvalidRequestException
+     */
+    public function upload(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'images.*' => 'required|file',
+        ]);
+        if ($validator->fails()) {
+            throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
+        }
+        $images = $request->file('images');
+
+        $paths = [];
+        foreach ($images as $image) {
+            $paths[] =  UploadService::uploadOne($image);
+        }
+
+        return $this->success(compact('paths'));
+    }
 
 }

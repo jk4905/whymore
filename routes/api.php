@@ -80,3 +80,4 @@ Route::get('feedbacks/{feedback}', 'Api\FeedbacksController@show');
 //    newRobot
 Route::get('robot/config', 'Api\RobotsController@getConfig');
 Route::post('robot/message', 'Api\RobotsController@store');
+Route::post('robot/upload', 'Api\RobotsController@upload');
