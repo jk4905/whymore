@@ -83,12 +83,12 @@ class RobotsController extends Controller
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
         $images = $request->file('images');
-
         $paths = [];
-        foreach ($images as $image) {
-            $paths[] =  UploadService::uploadOne($image);
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                $paths[] = UploadService::uploadOne($image);
+            }
         }
-
         return $this->success(compact('paths'));
     }
 
