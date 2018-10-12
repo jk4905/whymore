@@ -136,8 +136,7 @@ class OrdersController extends Controller
      */
     public function alipay(Order $order)
     {
-        // 判断订单是否属于当前用户
-        $this->authorize('own', $order);
+        // 判断订单是否属于当前用户，这里没有 Auth::user()
 
         $order->checkPay();
         $data = [
