@@ -92,7 +92,7 @@ class OrdersController extends Controller
         $validator = Validator::make($request->all(), [
             'address_id' => 'required|exists:addresses,id,user_id,' . $user->id,
             'row_id.*' => 'required|string',
-            'coupon_id' => 'filled|numeric|exists:user_coupons,id,status,1,user_id,' . $user->id,
+            'coupon_id' => 'nullable|numeric|exists:user_coupons,id,status,1,user_id,' . $user->id,
             'remark' => 'filled|string',
             'payment_type' => [
                 'required',
