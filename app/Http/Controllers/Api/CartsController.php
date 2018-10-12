@@ -39,10 +39,10 @@ class CartsController extends Controller
      */
     public function index()
     {
-        $this->cartInstance->restore(Auth::user()->id);
-        $content = $this->cartInstance->content();
-        usleep(10000);
-        $this->cartInstance->store(Auth::user()->id);
+//        $this->cartInstance->restore(Auth::user()->id);
+//        $content = $this->cartInstance->content();
+//        $this->cartInstance->store(Auth::user()->id);
+        $content = $this->cartService->getContent();
         return $this->success(['list' => $this->cartService->getGoodsList($content)]);
     }
 
@@ -239,11 +239,10 @@ class CartsController extends Controller
                 $list[] = $goodsInfo;
                 $goodsAmount = bcadd($goodsAmount, bcmul($goodsInfo['sale_price'], $goodsInfo['qty']));
             }
-        } catch (\Exception $e) {
-            throw $e;
-        } finally {
 //            保存购物车
             $this->cartInstance->store(Auth::user()->id);
+        } catch (\Exception $e) {
+
         }
         return compact('list', 'goodsAmount');
     }

@@ -30,8 +30,12 @@ class CartService
         if (empty($user->id)) {
             return [];
         }
-        $this->cartInstance->restore($user->id);
-        $this->cartInstance->store($user->id);
+        try {
+            $this->cartInstance->restore($user->id);
+            $this->cartInstance->store($user->id);
+        } catch (\Exception $e) {
+
+        }
         return $this->cartInstance->content();
     }
 
@@ -148,7 +152,7 @@ class CartService
      * 得到购物车中的数量和购物车商品 id
      *
      * @param $list
-     * @return LengthAwarePaginator
+     * @return mixed
      */
     public function getQtyAndRowId($list)
     {
