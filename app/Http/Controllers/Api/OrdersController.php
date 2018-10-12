@@ -158,7 +158,7 @@ class OrdersController extends Controller
 
         try {
             $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
-            $order = Order::findOrFail($alipayNotifyInfo->trade_no);
+            $order = Order::query()->where('order_id', $alipayNotifyInfo->out_trade_no)->firstOrFail();
             $order->checkPaymentValid($alipayNotifyInfo->total_amount);
             $url = env('APP_URL') . '/#' . env('APP_PAY_SUCCESS');
         } catch (\Exception $e) {
