@@ -182,7 +182,7 @@ class OrdersController extends Controller
             // 4、验证app_id是否为该商户本身。
             // 5、其它业务逻辑情况
             $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
-            $order = Order::query()->where('order_id', $alipayNotifyInfo->trade_no)->first();
+            $order = Order::query()->where('order_id', $alipayNotifyInfo->out_trade_no)->firstOrFail();
             $order->checkPaymentValid($alipayNotifyInfo->total_amount);
             Log::debug('Payment notify（Alipay）', $alipayNotifyInfo->all());
             $order->status = Order::STATUS_PAID;
