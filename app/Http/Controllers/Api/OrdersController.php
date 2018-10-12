@@ -184,7 +184,7 @@ class OrdersController extends Controller
             $this->checkPayAppIdValid($alipayNotifyInfo['app_id'], 'alipay');
             $order = Order::query()->where('order_id', $alipayNotifyInfo->out_trade_no)->firstOrFail();
             $order->checkPaymentValid($alipayNotifyInfo->total_amount);
-            Log::debug('Payment notify（Alipay）', $alipayNotifyInfo->all());
+            \Log::debug('Payment notify（Alipay）', $alipayNotifyInfo->all());
             $order->status = Order::STATUS_PAID;
             $order->paid_at = date('Y-m-d H:i:s', time());
             $order->payment_no = $alipayNotifyInfo->out_trade_no;

@@ -102,7 +102,7 @@ class Order extends Base
      */
     public function checkPaymentValid($amount)
     {
-        if ($this->real_amount != $amount) {
+        if (bccomp($this->real_amount, $amount) !== 0) {
             throw new InvalidRequestException(40010);
         }
         if ($this->status != self::STATUS_NOT_PAID) {
