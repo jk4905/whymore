@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadService
 {
+    /**
+     * 上传
+     * @param UploadedFile $image
+     * @return false|string
+     * @throws InvalidRequestException
+     */
     public static function uploadOne(UploadedFile $image)
     {
         if (!$image->isValid()) {

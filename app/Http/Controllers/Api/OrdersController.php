@@ -190,7 +190,9 @@ class OrdersController extends Controller
             $order->payment_no = $alipayNotifyInfo->out_trade_no;
             $order->save();
         } catch (\Exception $e) {
-            \Log::debug('Payment error' . $alipayNotifyInfo->out_trade_no . ' RESULT：' . $e->getMessage());
+            \Log::error('Payment error result：' . $e->getMessage());
+            echo 'FAIL';
+            exit;
         }
 
         return $alipay->success();// laravel 框架中请直接 `return $alipay->success()`
