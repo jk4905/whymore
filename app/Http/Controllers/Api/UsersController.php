@@ -28,7 +28,7 @@ class UsersController extends Controller
             $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
             return $this->success($success);
         } else {
-            throw new InvalidRequestException(40001);
+            throw new InvalidRequestException(40014);
         }
     }
 

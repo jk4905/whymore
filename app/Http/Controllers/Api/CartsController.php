@@ -17,6 +17,10 @@ use Illuminate\Validation\Rule;
 
 class CartsController extends Controller
 {
+
+//    todo 当两个接口同时访问购物车，将有一定几率报错。目前的做法是，try catch 然后 catch 异常不处理。
+
+
     protected static $cart = 'shopping_cart';
     public $cartInstance;
     public $disk;
