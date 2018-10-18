@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'Api\UsersController@login');
 Route::post('register', 'Api\UsersController@store');
 Route::post('sendSms', 'Api\UsersController@sendSms');
-Route::get('user/logout', 'Api\UsersController@logout');
+Route::get('logout', 'Api\UsersController@logout');
 //Route::post('add', 'Api\AddressesController@add');    // 添加省市区
 
 //    Goods
