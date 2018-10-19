@@ -49,7 +49,7 @@ class UsersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'mobile' => 'required|digits:11|unique:mysql.users,mobile',
-            'code' => 'required|digits:6',
+//            'code' => 'required|digits:6',
             'password' => 'required|min:6|max:32',
         ], [
             'unique' => '您已经注册过本网站了'
@@ -58,10 +58,10 @@ class UsersController extends Controller
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
         }
 
-        $redisCode = Redis::get('mobileCode' . $request->mobile);
-        if ($redisCode != $request->code) {
-            throw new InvalidRequestException(40004);
-        }
+//        $redisCode = Redis::get('mobileCode' . $request->mobile);
+//        if ($redisCode != $request->code) {
+//            throw new InvalidRequestException(40004);
+//        }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);

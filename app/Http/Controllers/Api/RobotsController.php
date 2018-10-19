@@ -41,6 +41,7 @@ class RobotsController extends Controller
         $validator = Validator::make($request->all(), [
             'from' => 'required|numeric',
             'to' => 'required|numeric',
+            'group' => 'nullable|numeric',
             'age' => 'required|integer|min:0',
             'user_name' => 'required|string',
             'avatar' => 'required|string',
@@ -56,7 +57,8 @@ class RobotsController extends Controller
 
         $input['type'] = RobotMessage::TYPE_USER;
         $input['qq'] = $input['from'];
-
+        $input['group'] = $input['group'] ?? 0;
+        
 //        保存消息
         RobotMessage::create($input);
 
