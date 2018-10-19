@@ -67,7 +67,7 @@ class UsersController extends Controller
         $input['password'] = bcrypt($input['password']);
         $input['avatar'] = env('DEFAULT_AVATAR');
         $user = User::create($input);
-        $user->name = 'WM' . str_pad($user->id, 6, STR_PAD_LEFT);
+        $user->name = 'WM' . str_pad($user->id, 6, STR_PAD_RIGHT);
         $user->save();
         $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
         $success['mobile'] = $user->mobile;
