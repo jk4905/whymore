@@ -34,7 +34,7 @@ class UsersController extends Controller
 
     public function logout()
     {
-        Auth::user()->token()->delete();
+        Auth::guard('api')->user()->token()->delete();
         return $this->success([]);
     }
 
@@ -65,7 +65,10 @@ class UsersController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
+        $input['avatar'] = env('DEFAULT_AVATAR');
         $user = User::create($input);
+        $user->name = 'WM' . str_pad($user->id, 6, STR_PAD_LEFT);
+        $user->save();
         $success['token'] = $user->createToken(env('APP_NAME'))->accessToken;
         $success['mobile'] = $user->mobile;
         Redis::del('mobileCode' . $request->mobile);
