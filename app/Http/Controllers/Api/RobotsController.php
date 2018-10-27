@@ -7,6 +7,7 @@ use App\Models\RobotConfiguration;
 use App\Models\RobotMessage;
 use App\Models\RobotMessageUser;
 use App\Services\UploadService;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -42,10 +43,10 @@ class RobotsController extends Controller
             'from' => 'required|numeric',
             'to' => 'required|numeric',
             'group' => 'nullable|numeric',
-            'age' => 'required|integer|min:0',
-            'user_name' => 'required|string',
-            'avatar' => 'required|string',
-            'sex' => 'required|int',
+//            'age' => 'required|integer|min:0',
+//            'user_name' => 'required|string',
+//            'avatar' => 'required|string',
+//            'sex' => 'required|int',
             'send_time' => 'required|date_format:Y-m-d H:i:s',
             'content' => 'required|string|min:1|max:4096',
             'images' => 'required|string|min:1|max:4096',
@@ -58,21 +59,38 @@ class RobotsController extends Controller
         $input['type'] = RobotMessage::TYPE_USER;
         $input['qq'] = $input['from'];
         $input['group'] = $input['group'] ?? 0;
-        
+
 //        保存消息
         RobotMessage::create($input);
 
 //        查询是否存在此QQ，没有则更新
-        RobotMessageUser::query()->updateOrCreate(['qq' => $input['from']], $input);
+        $userInfo = RobotMessageUser::query()->where('qq', $input['qq'])->first();
+        if (empty($userInfo) || $userInfo->updated_at <= formatFullDate(time() - 86400)) {
+            $qqInfo = $this->getQQInfo($input['qq']);
+            RobotMessageUser::query()->updateOrCreate(['qq' => $input['qq']], $qqInfo);
+        }
 
         return $this->success([]);
+    }
+
+    public function getQQInfo($qq)
+    {
+        $client = new Client();
+        $ret = $client->request('Post', 'http://jdo1.fzoss.cc:8856/api/GetQQInfo', [
+            'form_params' => ['qq' => $qq],
+            'headers' => [
+                'Content-type' => 'application/x-www-form-urlencoded',
+            ]
+        ]);
+        $result = json_decode($ret->getBody()->getContents(), true);
+        $qqInfo = $result['status'] ? $result['data'] : [];
+        return $qqInfo;
     }
 
     /**
      * 上传图片
      *
      * @param Request $request
-     * @param User $user
      * @return \Illuminate\Http\JsonResponse
      * @throws InvalidRequestException
      */
