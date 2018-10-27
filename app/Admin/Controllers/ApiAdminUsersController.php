@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Category;
 use App\Models\RobotConfiguration;
 use Encore\Admin\Auth\Database\Administrator;
 
@@ -20,6 +21,11 @@ class ApiAdminUsersController extends Controller
         $q = $request->get('q');
 
         return Administrator::query()->where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+    }
+
+    public function categories()
+    {
+        return Category::query()->get(['id', 'name as text']);
     }
 
     public function downloadRobotConfiguration(RobotConfiguration $robotConfiguration)

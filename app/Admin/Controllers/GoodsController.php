@@ -79,6 +79,8 @@ class GoodsController extends Controller
 
             $grid->name('商品名');
 
+            $grid->column('category.name','分类');
+
             $grid->description('描述');
 
             $grid->image('图片')->image('', 40, 40);
@@ -101,7 +103,7 @@ class GoodsController extends Controller
                 // 在这里添加字段过滤器
                 $filter->like('name', '商品名');
 
-                $filter->equal('status','状态')->select(self::$status);
+                $filter->equal('status', '状态')->select(self::$status);
             });
 
             $grid->filter(function ($filter) {
@@ -115,7 +117,7 @@ class GoodsController extends Controller
 
                 $filter->keyword('keyword', '关键字');
 
-                $filter->equal('status','状态')->select(self::$status);
+                $filter->equal('status', '状态')->select(self::$status);
 
             });
         });
@@ -131,6 +133,8 @@ class GoodsController extends Controller
         return Admin::form(Goods::class, function (Form $form) {
 
             $form->display('id', 'ID');
+
+            $form->select('category_id', '商品分类')->options('/admin/api/categories');
 
             $form->text('name', '商品名');
 

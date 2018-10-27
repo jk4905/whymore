@@ -12,6 +12,7 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->get('users', 'UsersController@index');
     $router->get('api/admins', 'ApiAdminUsersController@admins');
+    $router->get('api/categories', 'ApiAdminUsersController@categories');
     $router->get('api/robot_conf/{robot_configuration}', 'ApiAdminUsersController@downloadRobotConfiguration');
     $router->resource('banners', BannersController::class);
     $router->resource('categories', CategoriesController::class);
