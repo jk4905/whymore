@@ -49,7 +49,7 @@ class RobotsController extends Controller
 //            'sex' => 'required|int',
             'send_time' => 'required|date_format:Y-m-d H:i:s',
             'content' => 'required|string|min:1|max:4096',
-            'images' => 'required|string|min:1|max:4096',
+            'images' => 'nullable|string|min:1|max:4096',
         ]);
         if ($validator->fails()) {
             throw new InvalidRequestException(40002, $this->errorMsg($validator->errors()->messages()));
@@ -59,6 +59,7 @@ class RobotsController extends Controller
         $input['type'] = RobotMessage::TYPE_USER;
         $input['qq'] = $input['from'];
         $input['group'] = $input['group'] ?? 0;
+        $input['images'] = $input['images'] ?? '';
 
 //        保存消息
         RobotMessage::create($input);
