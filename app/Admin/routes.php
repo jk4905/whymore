@@ -21,4 +21,5 @@ Route::group([
     $router->resource('streamers', StreamersController::class);
     $router->resource('coupons', CouponsController::class);
     $router->resource('robot_configuration', RobotConfigurationController::class);
+    $router->resource('robot_messages', RobotMessagesController::class);
 });
